@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dưới Bầu Trời Năm Ấy - Tác giả Tịch Lam</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+
+  <style>
+    .ebookShell {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 28px;
+      align-items: start;
+      margin-top: 34px;
+    }
+
+    .ebookToc {
+      position: sticky;
+      top: 95px;
+      background: #fffaf3;
+      border: 1px solid var(--line, #e8d3b8);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 12px 32px rgba(82,44,16,.08);
+    }
+
+    .ebookToc b {
+      display: block;
+      margin-bottom: 14px;
+      font-size: 18px;
+    }
+
+    .ebookToc a {
+      display: block;
+      padding: 11px 12px;
+      border-radius: 10px;
+      color: #54351f;
+      line-height: 1.35;
+      margin-bottom: 6px;
+      transition: .2s;
+    }
+
+    .ebookToc a:hover,
+    .ebookToc a.active {
+      background: #f1dfc7;
+      color: #3b220f;
+    }
+
+    .readerTools {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line, #e8d3b8);
+    }
+
+    .toolBtn,
+    .readerNavBtn {
+      border: 1px solid #8a5528;
+      background: transparent;
+      color: #6b3b18;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    .toolBtn.active,
+    .readerNavBtn.primary {
+      background: #7a421d;
+      color: #fff;
+    }
+
+    .ebookReader {
+      min-width: 0;
+    }
+
+    .chapterPage {
+      display: none;
+      background: #fffaf3;
+      border: 1px solid var(--line, #e8d3b8);
+      border-radius: 22px;
+      padding: clamp(28px, 5vw, 58px);
+      box-shadow: 0 18px 44px rgba(82,44,16,.10);
+      scroll-margin-top: 100px;
+    }
+
+    .chapterPage.active {
+      display: block;
+      animation: fadeChapter .25s ease;
+    }
+
+    @keyframes fadeChapter {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .chapterTop {
+      text-align: center;
+      margin-bottom: 34px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid #ead7bd;
+      position: relative;
+    }
+
+    .chapterTop:after {
+      content: "❦";
+      position: absolute;
+      left: 50%;
+      bottom: -14px;
+      transform: translateX(-50%);
+      background: #fffaf3;
+      padding: 0 16px;
+      color: #9a6a3d;
+      font-size: 22px;
+    }
+
+    .chapterTop span {
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      color: #9a6a3d;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .chapterTop h2 {
+      margin: 0;
+      font-size: clamp(32px, 5vw, 50px);
+      line-height: 1.15;
+    }
+
+    .chapterText {
+      max-width: 820px;
+      margin: auto;
+    }
+
+    .chapterText p {
+      font-size: var(--reader-font-size, 19px);
+      line-height: 2.05;
+      margin: 0 0 24px;
+      color: #4f3929;
+      text-align: left;
+    }
+
+    .chapterNav {
+      max-width: 820px;
+      margin: 48px auto 0;
+      padding-top: 24px;
+      border-top: 1px solid #ead7bd;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .readerProgress {
+      margin-top: 18px;
+      font-size: 14px;
+      color: #6d5644;
+    }
+
+    body.readerDark {
+      background: #201206;
+    }
+
+    body.readerDark .bookPage,
+    body.readerDark .chapterPage,
+    body.readerDark .ebookToc {
+      background: #2a1608;
+      border-color: #5c361c;
+    }
+
+    body.readerDark .chapterText p,
+    body.readerDark .ebookToc a,
+    body.readerDark .readerProgress {
+      color: #f1dfc7;
+    }
+
+    body.readerDark .chapterTop h2,
+    body.readerDark .ebookToc b {
+      color: #fff2dd;
+    }
+
+    body.readerDark .chapterTop:after {
+      background: #2a1608;
+    }
+
+    body.readerDark .toolBtn,
+    body.readerDark .readerNavBtn {
+      color: #f1dfc7;
+      border-color: #c6945d;
+    }
+
+    @media (max-width: 900px) {
+      .ebookShell {
+        grid-template-columns: 1fr;
+      }
+
+      .ebookToc {
+        position: relative;
+        top: 0;
+      }
+
+      .chapterNav {
+        flex-direction: column;
+      }
+
+      .readerNavBtn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="logo" href="../index.html">
+        Tác giả Tịch Lam 🪶
+        <span>Ký ức • Tuổi trẻ • Giấc mơ</span>
+      </a>
+
+      <nav class="menu">
+        <a href="../index.html">Trang chủ</a>
+        <a href="../ebook.html">Ebook</a>
+        <a href="../tac-gia.html">Về tác giả</a>
+        <a href="../doc-gia.html">Cảm nhận độc giả</a>
+      </nav>
+
+      <span class="hamb">☰</span>
+    </div>
+  </header>
+
+  <main class="bookPage">
+    <div class="container">
+
+      <section class="bookIntro">
+        <div class="bigCover">
+          <img src="../images/duoi-bau-troi1.png" alt="Dưới Bầu Trời Năm Ấy">
+        </div>
+
+        <div class="bookInfo">
+          <div class="eyebrow">Tiểu thuyết thanh xuân</div>
+          <h1>Dưới Bầu Trời Năm Ấy</h1>
+
+          <p><b>Tác giả:</b> Phan Hải Nam · <b>Bút danh:</b> Tịch Lam</p>
+
+          <p>
+            Không phải mọi cuộc chia xa đều bắt đầu bằng nước mắt. Có những người lặng lẽ rời khỏi tuổi trẻ của chúng ta,
+            để lại phía sau một bầu trời đầy kỷ niệm. "Dưới Bầu Trời Năm Ấy" là lời gửi lại cho những năm tháng đã qua,
+            cho những người từng đồng hành và cho chính chúng ta của ngày còn chưa biết thế nào là tiếc nuối.
+          </p>
+
+          <div class="heroActions">
+            <a class="btn" href="#reader">Đọc từ đầu</a>
+            <a class="btn light" href="../ebook.html">Quay lại Ebook</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="reader" class="readerWrap ebookShell">
+        <aside class="ebookToc">
+          <b>Mục lục</b>
+          <a href="#loi-noi-dau" data-chapter="0">Lời nói đầu</a>
+<a href="#chuong-1" data-chapter="1">Chương 1: Nơi Trái Tim Còn Trần Trụi</a>
+<a href="#chuong-2" data-chapter="2">Chương 2: Những Buổi Chiều Chẳng Trọn Vẹn</a>
+<a href="#chuong-3" data-chapter="3">Chương 3: Cánh Diều Gửi Bầu Trời</a>
+<a href="#chuong-4" data-chapter="4">Chương 4: Tuổi Thơ Ướt Sũng</a>
+<a href="#chuong-5" data-chapter="5">Chương 5: Biết Đâu Cây Còn Nhớ</a>
+
+          <div class="readerTools">
+            <button class="toolBtn" id="fontMinus">A-</button>
+            <button class="toolBtn" id="fontPlus">A+</button>
+            <button class="toolBtn" id="darkToggle">Nền tối</button>
+          </div>
+
+          <div class="readerProgress" id="readerProgress">Đang đọc: 1 / 6</div>
+        </aside>
+
+        <article class="ebookReader">
+          
+<section class="chapterPage active" id="loi-noi-dau" data-index="0">
+  <div class="chapterTop">
+    <span>Phần 01</span>
+    <h2>Lời nói đầu</h2>
+  </div>
+  <div class="chapterText">
+    <p>Có những ký ức càng đi xa càng trở nên trong trẻo.
+Chúng nằm lại đâu đó giữa những năm tháng đã qua,
+âm thầm sống trong tiếng ve,
+trong màu nắng cũ và trong những gương mặt từng rất thân quen.</p>
+<p>Tôi viết cuốn sách này không phải để kể về một tuổi thơ đặc biệt.
+Bởi tuổi thơ của tôi cũng giống như hàng ngàn đứa trẻ khác ở một miền quê Bắc Bộ.
+Có những buổi chiều rong chơi ngoài đồng,
+có những trận mưa mùa hạ,
+có những đêm mất điện ngồi dưới gốc ổi nghe dế kêu,
+và có những người bạn mà tưởng như sẽ đi cùng mình suốt đời.</p>
+<p>Nhưng rồi thời gian vẫn lặng lẽ trôi.
+Những cánh đồng đổi màu.
+Những đứa trẻ ngày nào lớn lên.
+Mỗi người bước về một hướng khác nhau.</p>
+<p>Điều còn lại chỉ là ký ức.</p>
+<p>&quot;Dưới Bầu Trời Năm Ấy&quot; là lời nhắn gửi đến tuổi thơ,
+đến những người bạn cũ,
+và đến chính tôi của những năm tháng đã qua.</p>
+<p>Nếu trong những trang sách này,
+bạn vô tình nhìn thấy tuổi thơ của chính mình,
+thì có lẽ chúng ta đã từng cùng đứng dưới một bầu trời.</p>
+  </div>
+  <div class="chapterNav">
+    
+    <button class="readerNavBtn light" data-toc>☰ Mục lục</button>
+    <button class="readerNavBtn primary" data-goto="1">Chương sau →</button>
+  </div>
+</section>
+
+<section class="chapterPage " id="chuong-1" data-index="1">
+  <div class="chapterTop">
+    <span>Phần 02</span>
+    <h2>Chương 1: Nơi Trái Tim Còn Trần Trụi</h2>
+  </div>
+  <div class="chapterText">
+    <p>Bạn có như vậy không?
+Những khoảnh khắc bình thường của vài năm trước, giờ trở thành việc ta luôn ao ước. Có những điều lớn lên rồi mới biết là quý giá. Còn khi đang sống ở đó, ta chỉ thấy quen thuộc, bình thường, thậm chí là chẳng có gì đặc biệt. Như cái làng nhỏ nơi tôi lớn lên, nơi mà tiếng gió luồn qua lũy tre cũng trở thành một phần của ký ức. Không ai từng ghi chép về nơi đó, cũng chẳng ai làm thơ hay viết sách ca ngợi , nhưng tôi  nghĩ là nếu một lần đặt chân tới, người ta sẽ chẳng thể nào quên.</p>
+<p>Quê tôi thời đó sống bằng nghề mây tre đan và cá tôm được đánh bắt từ sông ngòi. Mùi mô hôi và mùi đất quyện vào nhau trong từng nhịp sống. Lũ trẻ như tụi tôi lớn lên bên tiếng lách cách của dao chẻ nan, tiếng nước chảy róc rách ở con mương đầu làng, mùi thơm của rơm rạ, mùi lúa mới đổ đầy vại trong nhà và tiếng gọi nhau í ới mỗi buối chiều. Chúng tôi thường tụ tập lại với nhau, chẳng vì lý do gì cả. Không cần hẹn trước, cũng không cần kế hoạch. Chỉ cần chiều xuống, gió vừa đủ mát, mặt trời còn lưng lửng, là từng đứa lại xuất hiện từ trong nhà, từ bụi chuối, từ lối mòn sau vườn. Như thể có sợi dây vô hình buộc cả đám chúng tôi lại với nhau.</p>
+<p>Nhóm chúng tôi có 4 người và một cái đuôi. Thằng Đen lớn tuổi nhất, da đen nhẻm, hai mắt lúc nào cũng sáng rực như sắp nghĩ ra trò gì đó mới mẻ. Nó giỏi leo trèo, giỏi bơi lội, có lần trèo lên tận ngọn tre lấy tổ chim sâu, về khoe mà ngực phanh ra như anh hùng làng. Nó là anh cả trong nhà nên thằng Đen thường xuyên phải phụ giúp bố mẹ làm những công việc hằng ngày như đan rổ, gánh nước, nấu cơm ... Nhưng lạ thay, lúc chơi nó chẳng bao giờ than mệt. Nó hay cười, cái cười khan khan như tiếng gió lùa qua tàu lá chuối khô.</p>
+<p>Con Hiền thì khác hẳn. Nó ít nói, nhưng ánh mắt lúc nào cũng như hiểu chuyện hơn cả bọn tôi cộng lại. Nhà nó ở gần nhà tôi, tường gạch không tô vữa, có giàn mướp già bám dọc hàng rào. Nó hay giúp mẹ chẻ nan, tay làm mà miệng vẫn lắng nghe tụi tôi bàn mưu tính kế cho buổi chiều. Con Hiền không bao giờ giành phần chơi trước, nhưng hễ chơi thì ít ai thắng nổi nó. Có lần tụi tôi chơi đoán tiếng chim, nó chỉ cần nghe một lần là gọi đúng tên, còn cả đám cãi nhau om sòm vì chẳng đứa nào chịu thua. Con Hiền chỉ cười, cười nhẹ như cái gật đầu của gió.</p>
+<p>Thằng Cò là đứa nhỏ hơn, người gầy gò, hai mắt lúc nào cũng láo liên như thể đang giấu một kho báu trong đầu. Nó chuyên bịa chuyện, nhưng khéo đến nỗi tụi tôi tin sái cổ. Có hôm nó bảo từng thấy cá lóc biết bay, rồi kể rành rọt y như thật. Mãi sau mới biết nó lấy chuyện trong mơ ra kể. Nhưng nhờ mấy câu chuyện như thế mà chiều quê bớt buồn. Nó có cái tài bắt dế, nặn đất sét thành đủ thứ hình thù quái dị, và hay đi chân đất chạy băng qua ruộng như gió lùa qua đồng.</p>
+<p>Còn con Huệ “cái đuôi nhỏ xíu” thì chỉ cần nghe tiếng tụi tôi là chạy theo. Mới có năm tuổi nhưng lanh lợi, lí lắc không kém ai. Nó thường mặc cái áo cũ của chị, dài qua đầu gối, tay áo phải xắn lên. Mỗi lần chơi trò gì, nó đều cố chen vô, dù chẳng ai rủ. Nhưng thiếu nó, đám tụi tôi lại thấy trống. Nó là cái tiếng cười ngây ngô chen vào giữa những câu chuyện người lớn, là cái bóng bé tẹo cứ lẽo đẽo theo sau làm đám anh chị thấy mình lớn hơn một chút.</p>
+<p>Còn tôi là đứa mà chẳng có gì nổi bật. Tôi không giỏi chơi trò nào, không nghĩ ra được kế hoạch, cũng chẳng phải người hài hước nhất. Nhưng tôi có một thói quen: mỗi chiều, khi tụi nó cười nói rộn ràng, tôi hay nằm ngửa mặt nhìn trời. Những đám mây bay qua chậm rãi, như thể đang kể một câu chuyện cũ. Và trong những lúc ấy, tôi cảm thấy trong lòng mình có thứ gì đó rất yên, rất dịu, như thể trái tim mình đang được hong khô dưới nắng chiều.</p>
+<p>Có một buổi chiều tôi còn nhớ mãi. Hôm đó gió thổi nhiều, lá tre lao xao như ai đang thì thầm gọi. Thằng Đen rủ đi bắt cào cào, con Hiền mang theo một chiếc lá sen khô đựng mận, thằng Cò cầm theo cái lọ thủy tinh nhốt dế, còn con Huệ thì cứ chạy theo ôm cái gấu bông không còn mắt. Chúng tôi đi dọc theo bờ ruộng, rồi ngồi túm tụm bên gốc rạ đã gặt xong. Không đứa nào nói chuyện học hành, không đứa nào nhắc đến tương lai. Chỉ là những câu chuyện vẩn vơ, vài tiếng cười giòn, một ít mận chua, vài con cào cào nhảy loạn. Nhưng buổi chiều đó, trong tôi là một bản nhạc không lời.</p>
+<p>Sau này, tôi hiểu ra rằng, tuổi thơ giống như cánh đồng lúa non. Nhìn thì phẳng lặng mà thực ra đang lớn từng giờ, từng phút. Mà lúc mình quay đầu lại thì mùa đã qua rồi.</p>
+<p>Làng tôi không có những khu vui chơi như thành phố lại càng không có những con đường rực sáng ánh đèn. Nhưng có rừng tre già rì rào như lời ru của ngoại. Có một bờ ao và vài cây táo được ông nội tôi trồng lúc còn trẻ. Có tiếng chân trần đạp trên đất mịn. Và có những đứa trẻ chẳng có gì trong tay, ngoài cả một bầu trời.</p>
+<p>Tôi chưa từng nghĩ mình sẽ viết lại những chuyện này. Cho đến khi nhận ra, nếu không viết, rồi một ngày nào đó tôi cũng quên mất... rằng mình đã từng sống những ngày rực rỡ đến vậy, theo cái cách mà người ta chỉ có thể sống khi còn nhỏ.</p>
+<p>Và ở một nơi rất xa hiện tại, tôi vẫn thấy mình nằm giữa đám bạn, nghe tiếng ve râm ran đâu đó vọng về, còn lòng thì nhẹ như một cánh diều chưa được buộc dây.</p>
+  </div>
+  <div class="chapterNav">
+    <button class="readerNavBtn" data-goto="0">← Chương trước</button>
+    <button class="readerNavBtn light" data-toc>☰ Mục lục</button>
+    <button class="readerNavBtn primary" data-goto="2">Chương sau →</button>
+  </div>
+</section>
+
+<section class="chapterPage " id="chuong-2" data-index="2">
+  <div class="chapterTop">
+    <span>Phần 03</span>
+    <h2>Chương 2: Những Buổi Chiều Chẳng Trọn Vẹn</h2>
+  </div>
+  <div class="chapterText">
+    <p>Như mọi ngày khác, tôi nằm dài trên chiếc chõng tre cũ kỹ trong khu rừng tre sau nhà ông bà, hai tay gối sau đầu, mắt dõi theo từng đám mây bồng bềnh trôi qua bầu trời tháng Bảy. Mùa hè năm ấy, trời trong đến lạ, đến mức tôi có thể ngửi thấy cả mùi nắng bám trên những tàu lá tre đung đưa. Rừng tre này là tụ điểm của cả lũ, là chỗ trú ẩn bất thành văn cho mọi trò nghịch dại, cho những buổi chiều không tên.</p>
+<p>Tôi vẫn chờ, như mọi khi. Chờ tiếng chân huỳnh huỵch của thằng Cò chạy băng qua bụi rậm. Chờ bóng dáng thằng Đen lầm lì từ xa bước đến với cái gì đó lấp lánh trong tay. Chờ cả con Hiền, con Huệ thường đến muộn nhất nhưng lại ồn ào nhất vì đằng sau có lúc nào cũng có đứa vừa chạy vừa hét: “Đợi em với!”</p>
+<p>Chiều hôm đó, thằng Cò đến đầu tiên. Nó thở hổn hển, quệt tay áo ngang miệng đầy cơm dính. “Tao ăn vội bát cơm nguội còn chưa kịp nhai,” nó lè lưỡi. Mặt mày lấm lem, quần xắn lệch, rõ là vừa trốn ăn cơm để đi chơi nhưng bị mẹ bắt lại. Tôi cười, gật đầu kiểu đồng lõa.</p>
+<p>Tôi với thằng Cò đang ngồi đếm kiến bò trên chân thì thằng Đen bất ngờ xuất hiện. Không tiếng động. Chỉ là bóng nó lù lù hiện ra giữa hai gốc tre già, tay cầm theo cái lon sữa bò đầy những con ve đã bị bứt cánh. Nó không nói gì, chỉ giơ lon lên như một chiến lợi phẩm rồi ngồi phịch xuống cạnh tôi. Mắt nó sáng, nhưng người thì đầy mồ hôi.</p>
+<p>“Bắt từ sáng giờ,” nó nói, giọng tỉnh bơ, “Tao trốn làm để bắt đó.”</p>
+<p>Tôi và thằng Cò nhìn nhau, rồi cùng phá lên cười. Cái cảm giác ba đứa lại tụ lại như thường lệ, tưởng chừng không có gì thay đổi.</p>
+<p>Chừng hơn nửa buổi ngồi nghịch ve, con Huệ mới chạy tới. Chân nó lấm lem đất, hai bím tóc bung ra, cái váy loang lổ mấy vết bùn khô. Vừa thở hổn hển vừa hét to từ xa:
+“Chị Hiền bị ốm rồi!”</p>
+<p>Tụi tôi ngồi bật dậy cảm giác hụt hẫng bao trùm lấy chúng tôi. Nhưng con Huệ thì không nói thêm gì nữa. Nó tới gần, đứng ngay rìa bóng râm rừng tre, môi mím lại, tay cứ vò vò vạt áo.</p>
+<p>Tôi nhìn nó. Mắt nó không đỏ, nhưng cũng chẳng trong veo như mọi khi. Giống như có ai vừa rút mất cái cười thường trực trên mặt nó đi đâu mất.</p>
+<p>Tôi không biết nó có buồn không, nhưng tôi biết nó muốn đi chơi. Cái kiểu đứng lấp ló, ánh mắt vừa lén nhìn rừng tre, vừa quay đầu ngóng về nhà... nhìn là biết. Nó không dám ở lại. Chắc má nó dặn phải coi chừng chị. Mà ở quê, lời người lớn giống như lệnh.</p>
+<p>Tôi nhớ lúc đó mình định hỏi “Sao không ở lại chơi chút?” nhưng rồi lại thôi. Vì tôi thấy ánh mắt nó không cho phép.</p>
+<p>Con Huệ quay lưng đi, chạy vụt như lúc nó đến. Váy nó quệt vào mấy bụi cỏ, bay lên rồi khuất sau con đường đất nhỏ. Và đột nhiên, bầu trời trong vắt là thế, lại thấy mờ đi. Rừng tre đang đung đưa theo gió, vậy mà tôi cảm giác gió dừng lại.</p>
+<p>Không gian tự nhiên trở nên… rộng. Không phải vì thiếu người, mà vì tụi tôi bắt đầu nhận ra cái “thiếu” ấy. Như khi xếp đủ bốn cái lon sữa bò thành một hàng dài để lăn đạn, giờ chỉ còn ba. Như ăn cái kẹo mút còn nửa que, nhưng nhận ra vị ngọt đã mất tiêu đâu mất.</p>
+<p>Thằng Cò vẫn ngồi chơi ve. Thằng Đen thì gác chân lên rễ cây, lim dim mắt như chẳng có gì. Nhưng cái “chẳng có gì” đó, nó gợn. Gợn nhẹ như một cơn ngứa không gãi được.</p>
+<p>“Tụi con gái đúng phiền,” thằng Cò buột miệng, giọng không chắc lắm.</p>
+<p>Ừ, tôi biết tụi nó đang giả bộ. Cái cảm giác hụt hẫng ấy, nó đến âm thầm lắm. Chẳng ai muốn thừa nhận. Cũng giống như chính tôi, cái đứa luôn nghĩ mình có thể bày trò mà không cần bọn con gái.</p>
+<p>Nhưng chiều hôm đó, tôi lại ngồi im, tay gãi đất, đầu thì nghĩ… chơi gì bây giờ?</p>
+<p>Thằng Đen ngồi im nãy giờ, bỗng dưng lên tiếng, giọng nó trầm như thể câu nói đó đã nằm sẵn trong cổ họng từ lâu lắm rồi, chỉ đợi lúc đúng để buột ra:</p>
+<p>“Hay là… tụi mình qua thăm nó.”</p>
+<p>Cả tôi và thằng Cò đều ngẩng đầu lên. Không ai trả lời ngay. Nhưng hình như tụi tôi đều biết: chỉ cần một đứa dám nói ra, là cả đám sẽ nghe theo.</p>
+<p>Chẳng mấy chốc, ba thằng bắt đầu nháo nhào chuẩn bị. Như người lớn.</p>
+<p>Tôi lục tung cái rương gỗ nhỏ, lôi ra vài viên kẹo gừng còn sót lại từ hôm mẹ đi chợ. Thằng Cò giật lấy cái quạt nan tre, nói kiểu tự hào: “Bị bệnh là phải có người quạt!”
+Thằng Đen thì rút từ trong túi ra một nắm lá bạc hà nó bứt sau vườn, bảo: “ Mẹ tao hay bỏ vô nồi xông, chắc cái này giúp được gì đó.”
+Tụi tôi loay hoay, bày biện đủ thứ lặt vặt. Không đứa nào nói gì nhiều, nhưng đứa nào cũng cố. Như thể trong đầu ai cũng đang bắt chước người lớn: đi thăm bệnh là phải mang theo cái gì đó. Dù chỉ là nhành hoa dại bên bờ rào hay cái kẹo đã chảy nước, miễn là có – miễn là đựng được chút tình trong đó.
+Tụi tôi kéo nhau đi trên con đường đất ẩm, mưa từ đêm hôm trước còn để lại những vũng nhỏ đọng nước loang loáng ánh chiều. Gió mát, đất ẩm, mùi cỏ dại lẫn với mùi áo quần phơi chưa khô. Không đứa nào nói gì thêm, chỉ lặng lẽ bước, như thể ai cũng biết chuyến đi này không đơn thuần là một cuộc dạo chơi nữa.</p>
+<p>Nhà con Hiền nằm bên mép con hẻm nhỏ, lối vào chỉ vừa đủ hai đứa đi song song. Trước cổng là mấy cây chuối tán to, thấp thoáng đu đưa trong gió như mấy cánh tay đang vẫy. Qua cổng là một khoảng sân con con lát gạch đã mòn, rêu bám quanh những mép đá xanh cũ kỹ. Cây bưởi ngay trước hiên có vài trái nhỏ đang lớn, vỏ còn xanh và sần sùi như đầu gối của tụi tôi sau một buổi chạy nhảy ngoài ruộng. Bên trái là cái bếp bé xíu, mái tôn lụp xụp, khói bếp cũ hình như vẫn còn đọng đâu đó trên mấy bức tường ám khói.</p>
+<p>Tụi tôi bước vào, chân rón rén, tay níu nhau, không ai bảo ai cũng tự thấy cần phải nhỏ tiếng. Trong nhà vắng lặng. Con Huệ đi ra, nó đưa mắt nhìn quanh, rồi kéo tụi tôi đi vào cái buồng nhỏ nơi con Hiền đang nằm.</p>
+<p>Tôi không nhớ rõ mình đã nói gì, đã nhìn thấy gì, hay con Hiền có nói gì lại không. Chỉ nhớ ánh mắt nó, vừa mệt, vừa cố nhoẻn cười. Tôi nhớ tiếng lá bưởi xào xạc ngoài sân và mùi khói bếp sót lại trong không khí. Có thể tôi đã đưa viên kẹo ra. Có thể không. Mọi chi tiết lúc ấy trôi qua như mấy đám mây buổi chiều – rõ đấy mà không chạm vào được.</p>
+<p>Giờ ngồi viết lại những dòng này, tôi mới thấy lòng mình nhói lên một cách lạ lùng. Cái buổi chiều năm ấy, cái lần cả lũ kéo nhau đi thăm bệnh ,không kèn không trống, không lời to tát. Nhưng lại là một vết gợn đầu tiên trong tâm hồn tôi, thứ khiến tôi lần đầu tiên nhận ra rằng có những khoảng trống không lấp được bằng trò chơi hay tiếng cười.</p>
+<p>Khi ấy, tôi chẳng hiểu sao lòng mình nặng trĩu sau khi rời nhà con Hiền. Nỗi buồn vu vơ dần len lỏi vào tâm trí, vào trong từng ngóc nghách trong trái tim tôi. Nỗi buồn không có hình thù, hình dạng nào cụ thể, cũng không thể chạm vào nó nhưng vẫn quanh quẩn trong trái tim tôi. Chắc tôi buồn và hụt hẫng vì mất đi một chiều mùa hè trọn vẹn, một buổi rong chơi không vết xước. Tối đó chẳng hiểu tại sao tôi không ngủ được, mãi sau này tôi mới hiểu cảm giác đó là cảm giác sợ một ngày nào đó, chúng tôi sẽ không tụ lại đủ mặt. Rằng cái gọi là “ tụi tôi” có thể vỡ tan lúc nào không hay</p>
+<p>Và có lẽ vì thế mà tôi vẫn viết. Tôi viết như thể đang níu lại những bóng lưng nhỏ xíu ấy, đang giữ lại tiếng cười của con Huệ, dáng vẻ lấm lem của thằng Cò, cái nhìn chững chạc sớm của thằng Đen, và cả nụ cười yếu ớt của con Hiền khi nhìn thấy tụi tôi hôm đó. Tôi viết như thể sợ nếu không viết, chúng tôi sẽ biến mất thật.</p>
+  </div>
+  <div class="chapterNav">
+    <button class="readerNavBtn" data-goto="1">← Chương trước</button>
+    <button class="readerNavBtn light" data-toc>☰ Mục lục</button>
+    <button class="readerNavBtn primary" data-goto="3">Chương sau →</button>
+  </div>
+</section>
+
+<section class="chapterPage " id="chuong-3" data-index="3">
+  <div class="chapterTop">
+    <span>Phần 04</span>
+    <h2>Chương 3: Cánh Diều Gửi Bầu Trời</h2>
+  </div>
+  <div class="chapterText">
+    <p>Có những ngày đã cũ nằm đâu đó trong trí nhớ, tưởng đã quên mà chỉ cần một mùi gió thoảng qua là tất cả hiện về, nguyên vẹn như chưa từng trôi xa. Cái gió của những buổi chiều tháng Tư – se se, thơm mùi đất ẩm, và luôn mang theo một nỗi nhớ rất khẽ, như thể ai đó từng thì thầm điều gì vào tai mình từ rất lâu rồi.
+Nơi đó có những ký ức dù chỉ thoáng qua, nhưng mỗi lần nhớ lại đều khiến lòng tôi rung lên như dây đàn bị gió khẽ chạm. Những buổi chiều vàng rực rỡ, tiếng cười trẻ con vang vọng dưới tán cây ổi già... tất cả như mới vừa hôm qua. Đã nhiều năm trôi qua kể từ lần cuối cùng tôi đặt chân về ngôi nhà cũ, nơi có cây ổi đứng sừng sững giữa sân, thân nứt nẻ như gương mặt một người già từng trải nhưng vẫn rợp bóng xanh. Tôi không biết nó có còn đó không, hay đã bị chặt đi vì lý do gì đó rất &quot;người lớn&quot;. Nhưng trong trí nhớ tôi, nó vẫn đứng đấy – trầm mặc, kiên nhẫn – như chính tuổi thơ của tụi tôi treo lơ lửng giữa những nhánh ổi, giữa bầu trời.
+Cây ổi không chỉ là một cái cây. Nó là điểm tụ họp, là nơi trú nắng, là &quot;trụ sở chính&quot; của những trò nghịch ngợm – và vào cái chiều hôm ấy, nó trở thành nền móng cho một dự án lớn nhất lịch sử tuổi thơ tụi tôi: xây nhà trên cây.
+Trời hôm đó nắng nhẹ, không oi. Mặt đất vẫn còn ẩm mùi mưa đêm qua, mát lạnh dưới chân. Gió buổi sớm còn vướng mùi cỏ ướt và mùi tro củi từ đâu đó thổi qua làm lòng người dịu lại lạ thường. Một buổi sáng tưởng như bình thường, mà lại đánh dấu một trong những ngày quan trọng nhất trong đời tuổi thơ tụi tôi – ngày xây nhà trên cây.
+Tụi nó kéo đến nhà tôi từ sớm, không ai bảo ai, chỉ vì một câu tuyên bố đầy quyền lực của thằng Đen hôm trước:
+“Chiều mai làm chòi. Ai tới trễ là khỏi phải leo lên.”
+Nó nói câu đó như thể đang ra nghị quyết ở họp dân phố. Mắt nheo nheo, tay khoanh lại, đứng giữa sân nhà tôi như có sẵn bản đồ quy hoạch và giấy phép xây dựng.
+Tụi tôi, chẳng cần bàn bạc, tin ngay và luôn. Vì lũ con nít tụi tôi vốn tin nhau một cách dở hơi nhưng trung thành. Thằng Cò còn bỏ cả buổi thả dế, con Hiền dời luôn giờ đi chợ phụ mẹ, còn tôi thì sáng sớm lôi hết đống tre cha chẻ từ tuần trước, vốn để rào chuồng gà… ra rửa sạch.
+Sáng đó, thằng Cò xách theo một cái túi vải rách te tua, bên trong đầy đinh gỉ, búa mẻ, dây kẽm xoắn như rắn rết. Nhìn qua đúng kiểu vừa cướp từ kho phế liệu về. Con Hiền thì mang theo một đống dây các loại và vài tấm bìa các-tông đã cong vênh. Nó bảo sẽ dùng để “chống nắng”. Chống được hay không thì chưa rõ, nhưng thấy cái tâm là tụi tôi đã ưng.
+Còn con Huệ vì nhỏ nhất đám nhìn bé hơn cả cây búa, lẽo đẽo phía sau, ôm khư khư một cái khăn vải tròn tròn, như ôm trứng gà. Nó không nói gì nhiều, chỉ cười toe toét, hai má hồng lên vì nắng. Mỗi lần tụi tôi bắc ghế trèo lên cây, con Huệ lại ngẩng cổ lên hỏi:
+“Xong chưa? Cho em lên với!”
+Tôi ngó xuống, thấy nó chắp tay sau lưng, ngước mặt, cái đầu nghiêng nghiêng như chim sẻ. Tội mà không cho lên được. Cái cây ổi thì to, nhưng nhánh cao, trèo lên khéo có khi mất nguyên cái quần chứ đùa. Với lại, con Huệ bé quá. Giao cho nó nhiệm vụ quan trọng nhất – canh chừng người lớn. Mỗi lần nghe tiếng bước chân từ xa, nó sẽ hú lên:
+“Có người tới kìa!”
+Mà nó hú liên tục. Cứ ai đi qua cổng là nó hú. Một lúc tụi tôi không biết lo giấu hay tiếp tục đóng đinh nữa.
+Nhưng khi làm thì đứa nào cũng chăm, nghiêm túc thấy rõ. Mồ hôi chảy như mưa, tay trầy, chân xước, mặt mày lem nhem, nhưng chẳng ai kêu ca. Chỉ có thằng Cò lâu lâu rít lên một tiếng vì đập búa trúng tay, còn thằng Đen thì hét:
+“Đinh lệch rồi! Lệch rồi mày!”
+Tôi cứ giữ thanh tre cho chắc, sợ sập. Con Hiền buộc dây căng đến nỗi tay đỏ ửng. Mỗi đứa một việc, làm như thể đã tập dượt với nhau từ kiếp trước. Hậu đậu, lúng túng, nhưng vui đáo để. Bây giờ nghĩ lại cứ thấy vừa thương vừa buồn cười.
+Vì có thể khi lớn lên, chẳng ai còn nhớ mình đã xây cái chòi méo mó trên cây ổi già này. Nhưng giờ thì tụi tôi đang ở đây, bên nhau, hồn nhiên và cố gắng như thể đang dựng nên cả một vương quốc.</p>
+<p>Mất cả buổi sáng và nửa chiều. Khi ánh nắng bắt đầu trườn xiên qua nhánh ổi, chiếu lên mặt đất loang lổ như tấm vải bạc, thì cái chòi…. hay đúng hơn là thứ gì đó gần giống một cái chòi – đã hiện hình. Méo mó. Xiêu vẹo. Có chỗ còn thủng cả lỗ. Nhưng nó đứng được, dính liền với cây ổi như một cái tổ chim khổng lồ, vụng về mà đầy cố gắng.
+Tụi tôi nhìn nhau, thở dốc. Không ai nói gì. Rồi không biết đứa nào bắt đầu, tất cả cùng phá lên cười. Cười như trút hết mọi mệt mỏi, cười vì công trình tồi tàn mà vĩ đại kia. Cười như thể cả thế giới này từ nay đã có một nơi là của tụi tôi – nơi không có người lớn, không có bài vở, không có tiếng gọi đi ngủ sớm hay mắng vì leo trèo nghịch ngợm.
+Tôi ngồi lên một thanh tre, nhìn xuống sân nhà. Mọi thứ bỗng trở nên nhỏ lại – từ mấy lu nước đến đống rơm góc vườn. Lần đầu tiên trong đời, tôi hiểu cảm giác &quot;ở trên cao&quot; không phải chỉ là độ cao của cái cây, mà là cảm giác mình đang nắm giữ một điều gì đó rất riêng, rất quý, mà người lớn không thể hiểu nổi.
+Một cơn gió lùa qua. Lá ổi rì rào. Mùi nắng bám lên mồ hôi, mùi tre tươi, mùi vôi cũ từ bức tường nhà loang lổ… tất cả quyện vào nhau như thứ mùi của tuổi thơ được ủ chín, thơm lừng và hơi ngai ngái.
+Tôi nhìn tụi nó – thằng Đen đang ngồi khoanh tay như vừa xây xong cung điện của người chim mà chúng tôi thường được nghe trong truyện, con Hiền đang tỉ mẩn bện thêm dây vào góc chòi, thằng Cò đang móc móc dưới sàn tìm cái đinh rơi, còn con Huệ, nó vừa mở khăn ra, cẩn thận vuốt một thứ gì đó mà tôi chưa kịp thấy.
+Động tác của nó chậm rãi lạ thường, như sợ gió bay mất. Tay nó nhỏ xíu mà nâng cái vật kia lên bằng cả sự nâng niu mà chỉ những đứa bé mới có – cái kiểu thương quý không nói thành lời, không cần nói.
+Tôi ngó lại, cố nhìn cho rõ, rồi bỗng cảm thấy khó hiểu.
+Đó là một cánh diều.
+Một cánh diều giấy đơn sơ, khung tre nhỏ và mảnh như xương cá, đã hơi cong méo vì thời gian. Diều màu đỏ nhạt, chỗ loang chỗ lem, đuôi là mấy sợi dây ruy băng cũ sờn. Thứ đó chắc hẳn từng đẹp lắm, từng bay rất cao. 
+“Của ông nội em làm,” con Huệ nói nhỏ, gần như thì thầm, mắt không rời cánh diều. “Hồi ông chưa mất…”
+Tụi tôi im bặt.
+Không ai bảo ai, cả đám ngồi yên, quên luôn chuyện ngôi nhà mới làm xong. Tôi không dám hỏi gì thêm, vì nét mặt con Huệ lúc đó… tôi chưa từng thấy – cái nét vừa tự hào vừa buồn, vừa hồn nhiên mà cũng sâu thẳm như người lớn.
+Thằng Đen gãi đầu, ngồi thụp xuống một nhánh cây. Con Hiền đưa tay vuốt đuôi diều. Còn thằng Cò thì lật đật kiếm sợi dây tốt hơn để buộc lại.
+“Cho nó bay lên đi,” con Hiền nói khẽ. “Bay lên cao.”
+Con Huệ gật đầu.
+Tụi tôi, sau một hồi lục đục, buộc dây xong, hăm hở chạy ra cánh đồng cuối xóm. Chân đứa nào cũng vội vã như thể đang chạy đua với thời gian, với cả trời và đất. Gió càng lúc càng mạnh, kéo theo cả những chiếc lá rơi bay xào xạc dưới chân, như đang đùa giỡn với tụi tôi.
+Con Huệ đi phía trước tôi, cứ lặng lẽ như bóng ma nhỏ, miệng lẩm nhẩm một câu gì đó mà chẳng ai nghe rõ. Cả đám cứ thế chạy về phía cánh đồng, không ai bảo ai, chỉ có tiếng cười nói vang lên, hòa trong gió. Đến giữa cánh đồng, tụi tôi dừng lại, nhìn nhau một lát rồi đồng loạt giơ tay chỉ lên trời.
+Thằng Đen như thể đã chuẩn bị sẵn sàng, một tay nắm chặt sợi dây diều, tay còn lại nâng nhẹ cánh diều lên, rồi thả vào gió. Con Huệ đứng ở phía dưới, nhìn theo từng động tác của tụi tôi, mắt sáng lên như đang chờ đợi một phép màu. Cánh diều bay lên không nhanh, nhưng cứ vững vàng, như thể biết được nó phải làm gì để vươn lên.
+Con diều xoay vòng trên không, như thử nghiệm cảm xúc của lũ trẻ. Một chút loạng choạng, rồi vút lên. Cả đám hò reo. Mắt con Huệ sáng rực, không nói gì, chỉ lặng lẽ nhìn theo. Gió vỗ về, cuốn đi tất cả sự lo lắng, chỉ còn lại cảm giác tự do, bồng bềnh giữa trời đất.
+Tôi không biết chắc diều có bay lên được không, hay là nó sẽ lại rơi xuống như bao lần trước. Nhưng lúc đó, tôi không nghĩ về điều đó. Tôi chỉ thấy, với con Huệ, đây là một điều gì đó rất thiêng liêng. Là một mảnh kí ức, một lời hứa mà ông nội nó đã gửi gắm vào chiếc diều cũ kỹ này. Và bây giờ, chiếc diều đang bay, mang theo một phần tuổi thơ, một phần kỷ niệm mà chỉ có tụi trẻ chúng tôi mới hiểu.
+Chúng tôi đứng dưới cánh diều, không ai nói gì, chỉ im lặng, nhìn nó bay lên cao hơn. Cái cảm giác khi nhìn diều vút lên trời như một ngọn lửa bùng cháy trong lòng, cứ tỏa sáng mãi.
+Rồi đột nhiên, một cái rầm.
+Sợi dây đứt.
+Cánh diều xoay vòng trên không, rồi lao xuống, rơi thẳng vào đám lúa non. Cả đám lặng im. Không ai chạy, không ai hét lên. Chỉ có gió ngừng thổi, như bối rối trước sự việc không ai đoán trước.
+Thằng Cò là đứa đầu tiên chạy xuống, chân nó lún sâu vào bùn. Nó hối hả lội tới chỗ cánh diều, nhẹ nhàng nhấc lên như nâng một đứa trẻ vừa bị ngã. Nó lội về phía chúng tôi, mặt nghiêm trọng như thể vừa cứu được cái gì đó quan trọng lắm. “Của mày nè,” nó nói, đưa diều cho con Huệ.
+Con Huệ không khóc. Nó nhận lại, phủi nhẹ bùn đất, rồi mỉm cười. Cái nụ cười đó, tôi không thể hiểu hết, nhưng nó làm tôi cảm thấy một cái gì đó rất lạ, như thể giữa đám trẻ này có một thứ gì đó không thể tả thành lời. Một thứ cảm xúc, rất chân thật, nhưng lại không thể giữ mãi, như chiếc diều bay.
+“Em sẽ dán lại,” con Huệ nói, giọng nó khẽ như một lời hứa, &quot;Mai mình thả nữa.&quot;
+Tụi tôi nhìn nhau, im lặng. Không ai nói gì. Nhưng trong không khí, một thứ gì đó vừa nhẹ nhàng, vừa nặng trĩu, như chính chiếc diều đã rơi xuống đất. Thằng Đen là đứa duy nhất khẽ nhếch mép cười, nhưng cái cười của nó không vui. Đôi mắt nó vẫn chăm chú nhìn con Huệ, giống như đang chờ đợi một câu chuyện nào đó chưa kể ra.
+Con Huệ ngồi xuống bên diều, nhẹ nhàng phủi đi những vết bùn còn sót lại. Đứa nào cũng nhìn nó, không dám phá vỡ sự yên lặng. Mọi thứ như dừng lại, chỉ có tiếng gió vù vù quanh cánh đồng, như đang thổi qua lòng chúng tôi, mang theo những nỗi niềm cũ.
+“Ông nói rằng... diều có thể gửi lời cho bầu trời,” con Huệ bỗng nhiên lên tiếng, giọng nó nhỏ xíu nhưng cũng đủ làm cái không gian yên tĩnh gần như vỡ tan. 
+Lũ chúng tôi không nói gì, chỉ nhìn nhau. Cái gì đó nặng nề bỗng tràn vào trong lòng, như một cơn gió bất chợt. Dù chúng tôi biết ông của con Huệ đã qua đời từ lâu, nhưng nghe con Huệ nói lại câu này, nó vẫn mang một nỗi buồn khó tả. Giọng nó đều đều, nhưng lại mang theo cái gì đó rất đỗi chân thật, như một lời hứa mà không ai dám từ chối.
+Mỗi đứa trẻ chúng tôi, trong khoảnh khắc đó, không biết phải nói gì. Cảm giác đó, nó như thể đang ở giữa một không gian trống rỗng, giữa một cái gì đó đã mất đi nhưng vẫn lởn vởn đâu đó quanh đây. Không phải chỉ là cái bóng của ông Huệ, mà là cái sự vắng lặng mà chúng tôi biết là không thể thay thế được.
+Thằng Đen đứng yên một lát rồi gật đầu, giọng nó ngập ngừng nhưng vẫn mạnh mẽ:
+“Mai mình thả lại, đúng không?”
+Con Huệ không trả lời ngay lập tức. Nó chỉ nắm chặt cuộn dây, mắt dõi theo cánh diều trong tay. Chúng tôi đứng im lặng, như thể mọi thứ xung quanh đã dừng lại. Cái gió mát của buổi chiều bỗng dưng trở nên yên ắng, và cánh diều ấy, nhỏ bé nhưng đầy ý nghĩa, như một sợi dây kết nối giữa những đứa trẻ và thế giới đã khuất.
+Khi chúng tôi bắt đầu bước về phía ruộng lúa, con Huệ vẫn không rời mắt khỏi cánh diều, như thể đang gửi một lời chào đến ông nó, người mà nó yêu thương nhất.
+Bây giờ, khi nghĩ lại, tôi hiểu rõ hơn. Cánh diều ngày ấy không chỉ là trò chơi của bọn trẻ. Nó là một cách để chúng tôi nói những điều chưa nói, gửi những ước mơ chưa thành, và cũng là cách để nói lời tạm biệt mà không cần phải thốt ra. Chỉ cần thả lên trời, để nó bay, để người ta hiểu. Nhưng có lẽ, cánh diều không chỉ là để lên cao, mà còn là để rơi – để chúng tôi biết rằng, đôi khi, cái ta muốn gửi đi không được nhận và phải thử lại lần nữa.
+Ngày đó, tôi không nghĩ đến điều này. Nhưng bây giờ, ngồi đây, tôi mới hiểu được rằng mỗi lần chúng tôi thả diều, dù nó có rơi xuống đi nữa, là một lần chúng tôi trưởng thành. Cái rơi ấy, cái đứt dây ấy, không phải là thất bại. Đó là cách để chúng tôi học cách đứng dậy và tiếp tục. Vì thế giới này, không phải lúc nào cũng dễ dàng.
+Căn nhà trên cây đã không còn nữa. Bão cuốn đi, cuốn cả những ký ức, những bức tường cũ kỹ, những buổi chiều dưới gốc ổi. Nhưng gốc ổi vẫn còn đấy. Dù không còn là nơi tụ tập của lũ trẻ, dù không còn ai ngồi dưới bóng cây ấy nữa, nó vẫn đứng đó trong ký ức của tôi, như một chứng tích không thể xóa nhòa. Cây ổi ấy, như một lời nhắc nhở rằng, dù ta có mất đi điều gì, những ký ức vẫn sẽ ở lại... không bị cuốn trôi theo thời gian.
+Giờ tôi hiểu rằng, cánh diều không phải là về việc nó có bay cao đến đâu, mà là việc nó đã được thả đi, và một phần của nó sẽ luôn bay trong lòng người. Dù có gió mạnh hay bão bùng, dù có bao nhiêu lần rơi xuống, ta vẫn phải thả, vẫn phải tiếp tục mơ.</p>
+  </div>
+  <div class="chapterNav">
+    <button class="readerNavBtn" data-goto="2">← Chương trước</button>
+    <button class="readerNavBtn light" data-toc>☰ Mục lục</button>
+    <button class="readerNavBtn primary" data-goto="4">Chương sau →</button>
+  </div>
+</section>
+
+<section class="chapterPage " id="chuong-4" data-index="4">
+  <div class="chapterTop">
+    <span>Phần 05</span>
+    <h2>Chương 4: Tuổi Thơ Ướt Sũng</h2>
+  </div>
+  <div class="chapterText">
+    <p>Có những ngày mưa bắt đầu không phải bằng giọt, mà bằng tiếng im lặng.
+Trưa hôm đó, tôi cũng chẳng nhớ rõ, nhưng trong cái kí ức mở hồ hiện lên một không gian như nặng trĩu một thứ gì đó rất lạ. Dường như bầu trời cũng đang suy nghĩ, do dự mãi không biết có nên thả mưa xuống hay giữ lại cho riêng mình.
+Tôi ngồi dưới gốc ổi, lưng tựa thân cây, tay cầm một chiếc lá ổi non, vò nhẹ giữa những ngón tay cho dậy mùi thơm dịu. Mùi hương ấy lẫn với cái mùi ngai ngái của đất ẩm và hương chua nhè nhẹ từ trái ổi rụng hôm qua... tất cả hoà vào nhau, thành một thứ ký ức không gọi tên, nhưng quen thuộc đến lạ.</p>
+<p>Rồi hạt mưa đầu tiên rơi xuống. Nhẹ. Mảnh. Lách tách trên lá, trên mái ngói đã phủ đầy rêu xanh , trên cái lon sữa bò cũ vứt trong góc sân. Tôi nhìn trời, rồi chẳng biết từ lúc nào, từng đứa trong bọn cũng lần lượt hiện ra như thể mưa là tín hiệu gọi đàn mà chúng tôi đã giao kèo từ trước.
+Thằng Đen tới trước, tay vẫn cầm nguyên cái mo cau làm mũ. Nó không nói gì, chỉ nheo mắt nhìn tôi, rồi đá một cục sỏi bay văng vào bụi chuối. Sau nó là thằng Cò, áo dính bùn đến tận lưng, chân trần chạy lon ton qua ngõ. Con Hiền mang theo chiếc nón rách, mặt nhăn nhó, càm ràm vì trượt ngã lúc chạy qua mương. Cuối cùng là con Huệ, tay xách chiếc rổ nhựa, đầu đội cái nón bèo nhèo mà mẹ nó chắc dùng để đi chợ. Nó đi sau cùng, bước nhỏ và đều, vừa đi vừa ngẩng mặt hứng mưa.
+Sau một lúc chúng tôi như bị ai đó kéo dây cót sẵn trong tim, cùng nhau bật dậy và chạy băng ra đồng. Lần này chẳng ai là người lên tiếng trước. vì đó là một phản xạ mà đã được hẹn trước với đất trời… Mưa quất vào mặt, vào lưng, vào tóc, mát lạnh và rát rạt như một trò đùa tinh quái của mùa hè.
+Bọn tôi chạy qua mấy luống khoai mì, qua bờ ruộng lầy nhão, để rồi té lên té xuống mà vẫn cười như thể vừa khám phá ra một kho báu.
+Con Huệ cố gắng lội theo, tay ôm chặt cái khăn nhỏ như sợ ai giật mất, miệng không ngớt hét những câu quen thuộc “chờ em với!”
+Thằng Cò thì khỏi nói. Nó vừa té vừa lăn như trâu tắm bùn, mặt dính toàn đất, cười ha hả như con khỉ xổng chuồng.
+Nhưng thằng Đen… thằng Đen mới là đứa kỳ lạ nhất hôm đó.
+Nó vốn là đứa trầm. Ở nhà hay ngồi đan rổ, lưng còng như ông cụ non.
+Thỉnh thoảng chơi cũng cười, cũng giỡn, nhưng có gì đó lúc nào cũng nén lại như thể nó luôn phải giữ một phần mình lại cho những chuyện lớn hơn cái tuổi của nó.
+Nhà nó nằm gần mé sông, nơi mà mỗi mùa lũ về nước dâng tới bậc thềm.
+Nó quen với nước, với mưa, với tiếng cá quẫy trong xô và những cơn gió lạnh rít qua khe cửa.
+Nhưng mỗi lần mưa đổ, như chiều hôm đó, nó lại như lột xác.
+Thằng Đen lao lên trước, chạy nhanh nhất, hét to nhất.
+Nó nhảy, nó nhào, nó hét vang cả cánh đồng như một con thú hoang vừa được tháo xích.
+Mưa xối lên người nó, ướt đẫm cả áo, tóc dính bết trên trán mà nó vẫn cười sảng khoái, miệng hét vang như thể đang nói chuyện với bầu trời.
+Tôi nhìn nó mà bất giác thấy gì đó là lạ.
+Không hẳn là ghen tị, cũng không hẳn là lo lắng.
+Chỉ là... trong cái sự náo động kia, có cái gì đó giống như một vết nứt – nhỏ thôi, nhưng không giấu được.
+Một sự giải thoát? Một điều mong mỏi không gọi tên được?
+Tôi cũng không biết nữa. Tôi chỉ biết, khi mưa đến, thằng Đen không còn là thằng Đen.
+Nó trở thành chính nó hoặc là một phần nào đó mà nó vẫn giấu đi, cất sâu trong cái vỏ cứng cáp, lặng lẽ của thằng con trai sống gần mép sông, quanh năm lội nước bắt cá, về đan rổ phụ mẹ.
+Tôi vẫn nhớ rõ lần đầu tiên thấy nó khóc. Không phải là kiểu khóc thút thít của mấy đứa nhỏ, mà là khóc nghẹn lại, không một giọt nước mắt, chỉ có ánh mắt đỏ hoe, nhìn xa xăm về phía bờ sông như thể đang tìm lại một điều gì đã trôi đi cùng dòng nước. Khi đó tôi không hỏi gì, vì tôi biết... nó sẽ không nói.
+Và cũng giống hôm đó, trong mưa, nó lại cười. Cái kiểu cười như vừa trút bỏ một cái balo nặng cả trăm ký đang đè lên ngực.
+Nó nhảy lên như con ếch, hét thật to như muốn xé toang cả bầu trời:
+“Đừng đứng đó nữa, mày! Mưa đâu phải để ngó, là để tắm chứ!”
+Tôi lặng nhìn nó một lúc lâu, như thể thấy một người hoàn toàn khác.
+Tôi không hiểu hết nó. Có thể chẳng bao giờ hiểu nổi. Nhưng tôi chắc một điều, trong những lúc như thế này, nó được là chính nó một thằng Đen không phải làm anh cả, không phải gồng mình phụ bố đánh cá, không phải phụ mẹ đan rổ đến chai cả tay.
+Chỉ là một thằng nhóc 10 tuổi, được nhảy giữa mưa, được hét lên, được sống.
+Và có lẽ, tôi ghen với nó một chút.
+Tôi ghen với cái cách nó hòa vào cơn mưa mà không chút do dự.
+Tôi ghen với cái tự do mà nó có dù chỉ là trong vài phút tắm mưa ít ỏi của một buổi chiều tháng sáu.
+Tôi bước chân vào mưa. Không hét. Không nhảy.
+Chỉ bước đi.
+Lặng lẽ đi theo thằng bạn mà tôi vẫn luôn nghĩ là hiểu nó.
+Mưa mỗi lúc một lớn. Đám tụi tôi càng mưa to càng máu.
+Thằng Đen bắt đầu lăn lộn dưới ruộng như một con cá trê bị bắt hụt, nước bùn bắn tung tóe. Thằng Cò rảnh rỗi nên lấy dép làm thuyền, thả trôi trên mương, đuổi theo rượt bắt như thằng điên. Được vài phút thì trợn mắt la to:
+“Ê dép tao trôi về hướng nhà ông Tám rồi! Má ơi!”
+Cả lũ cười nghiêng ngả.
+Tôi với thằng Đen rủ nhau chơi trò “té nước ”. Cứ hai thằng đứng đối diện nhau, lấy hai tay vục nước đục lè lè dưới ruộng mà té thẳng vô mặt đối phương.
+Chơi được ba lượt thì tôi trúng một cú chí mạng ngay mồm, ho sặc sụa vì hít nguyên một muỗng bùn non.
+Thằng Đen cười muốn xỉu, vỗ đùi đen thui của nó cái bốp:
+“Chơi dại mà đòi sống dai, hả mày?”
+Và ngay lúc tôi đang bám cục bùn đuổi theo thằng Đen thì phía sau vang lên tiếng hét thất thanh của con Huệ:
+“Anh ơi! Cò xô em ngãaaa!”
+Thằng Cò đang nhón chân lội nước thì quay lại la làng:
+“Đâu có! Tự nó trượt mà! mày đừng vu oan cho tao!”
+Tôi thở dài. Trò vui giờ sắp thành đại án.
+Một vụ kiện &quot;ngã do tự thân&quot; hay &quot;bị xô bởi thế lực thù địch&quot;?
+Và tôi như mọi lần lại là nhân chứng sống… của một thời tắm mưa huy hoàng nhưng dính bùn từ đầu tới chân.
+Con Huệ đứng dậy, mắt ngấn nước, vội vàng chạy đến chỗ con Hiền, kéo tay chị nó mà khóc nức nở:
+“Chị Hiền ơi! Anh Cò xô em ngã rồi, đau quá…”
+Con Hiền đang đứng ở ven ruộng, tự dưng mắt trợn lên như có điện giật. Nó quay lại nhìn thằng Cò một cái lườm sắc lẻm rồi lại nhìn con Huệ, nhíu mày:
+“Thằng Cò, mày làm gì em tao?”
+Thằng Cò như một chú cún con bị dồn vào thế bí, vội vàng lắc đầu:
+“Đâu có! Mày đừng nghe lời con Huệ, tao đang đuổi theo chiếc dép của tao mà!”
+Con Huệ lại khóc to hơn, nước mắt tèm lem như mưa mùa xuân. Thằng Cò trông có vẻ oan uổng thật, nhưng mà ai mà tin được, khi chính nó lại đang loay hoay với chiếc dép thả trôi đi xa ngoài kia. Mặt thằng Cò giờ đần ra như vừa phát hiện ra mình bị “mưu đồ” mà không hay biết.
+Con Hiền lúc này không nói gì, chỉ lặng lẽ bước tới, cúi xuống bế con Huệ lên. Con Huệ vẫn khóc nức nở, nhưng rồi thằng Hiền, với sức mạnh của một người chị, dỗ dành được nó. Lúc đi qua thằng Cò, con Hiền không quên đá cho nó một cái thật mạnh vào chân, mặt mũi tỉnh bơ như thể mình đang làm một việc hết sức đương nhiên.
+Thằng Cò thì đứng đó, vỗ trán, cảm thấy như mình bị oan ức tột cùng, nhưng lại chẳng thể làm gì.
+“Chưa gì đã bị lôi vào rắc rối,” thằng Cò tự nhủ, rồi tiếp tục nhìn chiếc dép đang chầm chậm trôi ra xa, dường như quên bẵng chuyện con Huệ đang “làm toáng” lên.
+Cuối cùng, trời tạnh mưa. Không khí trở lại yên ắng, chỉ còn mùi đất nồng nồng phảng phất trong gió. Lũ chúng tôi chia tay nhau, đứa nào về nhà đứa nấy. Cái áo dính bùn, cái quần ướt nhẹp, chân tay rịn bết vì nghịch đất, nhưng đứa nào cũng cười toe như thể cái trận mưa vừa rồi đã rửa sạch hết mọi thứ – cả bụi bặm, lẫn ưu phiền trẻ con.
+Tôi về nhà, thay bộ đồ khô, ngồi một mình dưới gốc ổi, nhìn trời ngả dần sang màu tím sẫm. Mưa đã thôi rơi, nhưng dư âm của nó vẫn còn quẩn quanh đâu đó, như tiếng ai đang kể lại một câu chuyện cũ.
+Lúc đó, mẹ tôi từ trong bếp bước ra, tay còn cầm cái rổ rau, nói với tôi:
+— Mày chạy qua gọi tụi nó sang ăn cơm. Bố mẹ mấy đứa nó chắc chưa về kịp đâu, đường lầy thế kia ai đi nổi.
+Tôi hiểu ngay. Ở quê, sau mỗi cơn mưa lớn, cái việc bố mẹ không kịp về vì đường xình là bình thường. Nhưng cái tình làng nghĩa xóm, cái sự thương nhau qua chén cơm, bát canh rau muống luộc, thì chưa bao giờ vơi cạn.
+Tôi gật đầu, nhảy phốc khỏi chiếc chõng tre rồi chạy thẳng ra đầu ngõ. Một lúc sau, tiếng huyên náo của lũ trẻ lại rộn ràng ở cổng nhà tôi, tiếng dép lê bệt bệt, tiếng cười khúc khích, tiếng ai đó ré lên vì giẫm phải vũng nước chưa kịp rút.
+Chẳng mấy chốc, dưới gốc ổi già, cả đám lại tụ tập đông đủ. Mấy cái áo cũ, quần sờn, tóc tai bù xù vì chưa kịp chải, thế mà mặt đứa nào đứa nấy sáng rỡ như vừa được ai đó ban thưởng một bữa tiệc linh đình.
+Mẹ tôi dọn cơm ra trước cho tụi nhỏ, mấy đĩa cá kho, tô canh bí đỏ và nồi cơm nóng hổi còn vương mùi khói bếp. Bà chỉ cười nhẹ rồi quay vào nhà, nói vọng lại:
+“Mấy đứa ăn trước đi, bác đợi bác trai về rồi ăn sau.”
+Chén bát lóc cóc, đũa thì mỗi chiếc một kiểu, có cái đã gãy đầu được vót lại bằng que tre, nhưng không ai phàn nàn gì. Mắt đứa nào cũng dán chặt vào mấy món nóng hổi: nồi canh rau ngót nấu tôm khô thơm lừng, dĩa cá rô chiên giòn rụm, thêm chén nước mắm có vài lát ớt đỏ au như tô điểm cho cả bữa cơm.
+Cả bọn vừa ngồi xuống, mưa cũ chưa kịp khô trên áo, đã thi nhau xới cơm. Thằng Cò ăn như bị bỏ đói ba ngày, con Huệ thì còn sụt sịt nhưng vẫn không quên gắp miếng cá to nhất, miệng phụng phịu nói là “ăn để bớt đau”. Con Hiền lườm nó một cái như hồi chiều, còn thằng Đen thì vừa ăn vừa cười tủm tỉm, như thể trời mưa chiều nay đã gột sạch hết mọi buồn bực trong nó.
+Tôi ngồi giữa, vừa nhai cơm vừa nhìn từng khuôn mặt thân quen quanh mình. Trong khoảnh khắc ấy, dưới gốc ổi già, ánh đèn vàng hắt qua tán lá, tôi thấy lũ trẻ như đang phát sáng — không phải vì ánh đèn, mà vì thứ gì đó trong trẻo, yên lành, mà chỉ có tuổi thơ mới có.</p>
+<p>Tôi chẳng còn nhớ rõ sau đó là gì nữa. Những hình ảnh cứ thế mờ dần như màn mưa chiều tan nhanh sau cơn giông. Chỉ còn đọng lại trong tôi là tiếng cười rộ lên dưới gốc ổi, là hơi cơm nóng hòa lẫn mùi đất ẩm, là ánh mắt mẹ tôi nhìn ra sân trong lúc chờ bố về, bình thản mà ấm áp. Có thể sau đó là trò chơi trốn tìm, cũng có thể là một giấc ngủ ngon lành trong tiếng mưa còn rơi lất phất trên mái hiên. Nhưng tôi biết chắc một điều: hôm đó là một ngày trọn vẹn…
+Ký ức về ngày hôm ấy cứ thế mờ dần đi như vết chân bị mưa xóa trên lối đất. Chỉ còn đọng lại là cái cảm giác nước lạnh ngấm vào da thịt, mùi bùn đất ngai ngái dính đầy trên áo quần, và cả tiếng tim mình đập khe khẽ khi nhìn thằng bạn thân nhất sống thật với chính nó trong cơn mưa đầu mùa.</p>
+<p>Tôi nhận ra rằng, cơn mưa của tuổi thơ không chỉ tưới mát những cánh đồng ngập nước năm ấy, mà còn lặng lẽ gột rửa tâm hồn tôi… một lần, rồi mãi mãi về sau.
+Giữa cuộc đời đầy bụi bặm và mỏi mệt, tôi vẫn luôn mong có một cơn mưa như thế... muốn trở về , muốn trải nghiệm một lần nữa khoảnh khắc ấy mình đã vui vẻ như thế, để tôi được trở về làm thằng nhóc ướt sũng, cười vang giữa đồng, chẳng cần phải lớn thêm ngày nào nữa.
+Có lẽ ký ức là điều duy nhất thời gian không thể chạm đến , dù năm tháng có phai mờ đi bao nhiêu, tôi đã lớn tới chừng nào, trong mảnh kí ức vụn vặt đó. Xoay vòng với những điều vội vã ngoài kia, sự tự nhiên đang bị mất dần, thấy nhớ những ngày thảnh thơi, tự do tự tại.
+Giờ còn lại gì, có phải là mình nữa không nhỉ...</p>
+  </div>
+  <div class="chapterNav">
+    <button class="readerNavBtn" data-goto="3">← Chương trước</button>
+    <button class="readerNavBtn light" data-toc>☰ Mục lục</button>
+    <button class="readerNavBtn primary" data-goto="5">Chương sau →</button>
+  </div>
+</section>
+
+<section class="chapterPage " id="chuong-5" data-index="5">
+  <div class="chapterTop">
+    <span>Phần 06</span>
+    <h2>Chương 5: Biết Đâu Cây Còn Nhớ</h2>
+  </div>
+  <div class="chapterText">
+    <p>Có những buổi tối quê bắt đầu rất nhẹ. Nhẹ đến mức tưởng như không có gì xảy ra, ngoài tiếng ếch kêu và vài làn gió thổi ngang qua những tấm phên tre khô. Trời chưa kịp tối hẳn thì điện cúp. Không tiếng báo trước, không nhấp nháy, chỉ là mọi thứ tắt phụt như người ta chớp mắt... rồi thôi.
+Ở quê, chuyện mất điện chẳng phải tai họa. Với tụi nhỏ như tụi tôi, nó còn giống như một phần của mùa hè. Mỗi lần mất điện là như có ai khẽ gõ vào bả vai: “Tới giờ rồi đó. Ra mà chơi.” Không ai cần phải rủ ai. Không cần điện thoại, cũng không cần lý do. Tụi tôi chỉ cần biết: cả xóm tối om, là đủ biết… tụi nó cũng sẽ đến.
+Tôi ngồi trong nhà một lúc, tay nghịch cái quạt nan gãy cán. Căn nhà im ắng lạ thường, như thể mọi tiếng động đã lùi xuống bếp. Trăng non treo lơ lửng đầu sân, ánh sáng lờ mờ không đủ soi đường nhưng đủ để nhớ rằng… tuổi thơ chưa tắt.
+Không lâu sau, tiếng dép lẹp xẹp vang lên từ đầu ngõ. Tôi chưa nhìn ra cũng biết là ai. Cái kiểu đi lạch bạch ấy chỉ có thể là thằng Cò – vừa chạy vừa la, miệng nói còn nhanh hơn chân bước:
+“Ra gốc ổi đi tụi bây! Tối nay chơi tới sáng cũng được luôn á!”
+Tôi bật dậy. Không cần nghĩ. Mà đúng hơn là… chẳng có gì phải nghĩ. Ngoài sân, con Hiền đã đứng chờ từ lúc nào với cái gối ôm kẹp dưới tay. Con Huệ thì chậm hơn, nhưng ánh mắt lại sáng nhất – như thể trong bóng tối, nó là người duy nhất mang theo ánh đèn.
+Còn thằng Đen… vẫn vậy. Không bao giờ là người tới đầu tiên, nhưng cũng chẳng bao giờ là người tới sau cùng. Nó ngồi sẵn dưới gốc ổi, lặng lẽ như cái bóng đã có mặt ở đó từ trước cả bọn tôi, như thể nó và cái cây ấy là một phần của nhau – cũ kỹ, bình yên, và luôn có mặt mỗi khi tụi nhỏ cần một chỗ để tụ lại.
+Tụi tôi không bàn bạc. Chỉ lẳng lặng ngồi xuống. Cây ổi vẫn còn thơm mùi mưa cũ, đất dưới gốc hơi ẩm và mát. Gió từ đồng lúa thổi lên khiến tà áo con Huệ phồng nhẹ. Đứa nào cũng tự chọn chỗ quen thuộc, như thể cái rạp chiếu bóng không tên này đã có ghế định sẵn cho từng đứa.
+Không có đèn. Không có tivi. Chỉ có ánh trăng, tiếng dế, và những câu chuyện chưa kể.
+Thằng Cò chưa bao giờ là đứa chịu ngồi yên lâu.
+Mới chỉ ngồi chưa đầy hai phút, nó đã ngọ nguậy, bứt một cọng cỏ, búng mấy hòn đất, rồi lấy ngón tay quẹt lên mặt đất vẽ những đường nguệch ngoạc. Mắt nó đảo qua từng đứa, như thể đang đếm xem có ai còn nhớ sự có mặt của nó không.
+— Tối nay chơi gì? Kể chuyện ma đi, ha? Hay… thi ngồi yên lâu nhất?
+Nó cố nói bằng cái giọng pha trò đặc trưng, nhưng lần này không đứa nào buồn đáp. Con Hiền đang mân mê mấy sợi tóc rối, mắt lim dim. Con Huệ ôm cái khăn bông xỉn màu, gối đầu lên chân chị, không nói gì. Thằng Đen vẫn ngồi sát gốc ổi, tay khoanh trước ngực, trầm như đất.
+Không khí im đến kỳ lạ. Nhưng lạ hơn là… cả bọn không hề khó chịu vì điều đó.
+Chỉ có thằng Cò. Tôi thấy nó khựng lại một chút. Giống như vừa lỡ chân bước hụt một bậc thang không ai thấy. Rồi nó vội vã lôi trong túi ra hai hòn sỏi trắng, gõ lách tách lên mặt đất. Không thành nhịp, không rõ trò, chỉ là… để có âm thanh.
+Hồi đó, tôi không để ý nhiều. Tôi còn cười, còn tưởng nó đang bày trò như mọi khi. Nhưng bây giờ nghĩ lại, tôi hiểu.
+Thằng Cò sợ yên lặng. Sợ một buổi tối tụ tập mà nó không làm ai cười. Sợ mình bị mờ đi, như cái bóng đèn dầu đã vơi gần hết tim, chỉ còn ánh sáng le lói mà không ai buồn để ý.
+Tôi nghĩ tới những lần khác, những trò nó bày, những câu chuyện nó nói khoác – nào là bắt được cá bằng tay, leo cây không cần tay, thậm chí từng suýt bị rắn cắn mà vẫn bình thản nằm ngủ. Tôi từng cho đó là thói khoác lác dễ thương. Giờ mới hiểu… nó chỉ đang cố để tụi tôi không quên mất nó đang có mặt.
+Cái cách nó cười to hơn khi tụi tôi cười nhỏ. Cái cách nó nói chèn vào khi có khoảng trống giữa hai câu chuyện. Cái cách nó làm trò ngớ ngẩn để kéo ánh mắt về phía mình, dù chỉ một giây.
+Tôi không biết từ khi nào mà nó lại như vậy. Có thể là từ một buổi chiều nào đó tụi tôi đã cười mà không đợi nó. Có thể là từ một lần nó đứng nhìn tụi tôi chơi, mà không ai rủ. Cũng có thể… đơn giản là có những đứa trẻ sinh ra đã mang sẵn một nỗi sợ bị quên lãng – dù chỉ trong khoảnh khắc.
+Nó tiếp tục gõ sỏi, như gõ vào đêm, gõ vào cái im lặng đang lớn dần quanh gốc ổi.
+Tôi ngồi cách nó chỉ vài gang tay, nhưng lúc đó… tôi thấy nó rất xa. Xa như thể giữa chúng tôi là một cái ao cạn, chỉ cần tôi không nhìn sang, nó sẽ lặng lẽ chìm xuống mà không tạo một gợn sóng nào.
+Bây giờ tôi ước, giá như khi ấy tôi đưa tay sang một chút. Hoặc chỉ cần gọi tên nó. Nhưng tôi đã không làm gì.
+Tôi chỉ ngồi đó, nghe tiếng sỏi gõ đều, rồi nhìn lên trăng, rồi nghĩ vu vơ điều gì đó mà mãi sau này mới gọi được thành tên.
+Tôi chỉ ngồi đó, nghe tiếng sỏi gõ đều, rồi nhìn lên trăng, rồi nghĩ vu vơ điều gì đó mà mãi sau này mới gọi được thành tên.
+Cả gốc ổi rơi vào một thứ tĩnh lặng kỳ lạ. Không phải sự im lặng của chán chường, mà giống như cái cách trời lặng gió trước khi có cơn mưa nhỏ – dịu, nén lại, và chờ điều gì đó khẽ khàng bật ra.
+Rồi chẳng rõ đứa nào phì cười trước. Có thể là thằng Cò, cũng có thể là con Huệ – hay là cả hai, chẳng quan trọng. Tiếng cười bật ra khe khẽ như ai đó làm rơi một hòn sỏi xuống lòng ao đang phẳng. Không ai ngăn nó lại. Cũng không ai hỏi vì sao lại cười.</p>
+<p>Thằng Cò bật dậy trước. Nó nhảy lên nhánh rễ trồi, nhìn thằng Đen
+— Ê Đen, tao với mày lập hội đi. Hội… canh cây! Đứa nào động vào cây là bị bắt!
+Thằng Đen không nói gì, nhưng nhếch môi cười. Nó lặng lẽ đứng lên, bẻ một cành khô làm gậy rồi đóng cọc quanh gốc ổi như thật. Tụi tôi quen quá cái kiểu đó — nó ít nói, nhưng mỗi lần nhập cuộc là chơi tới nơi.
+Con Huệ vỗ tay rồi chạy đi tìm đá, còn con Hiền thì thở dài, lẩm bẩm &quot;lại bày trò&quot;, nhưng cũng kéo gối lại gần.
+Tôi không đứng lên. Tôi chỉ ngả người xuống cỏ, mắt nhìn ánh trăng lọt qua tán lá ổi. Cây ổi bỗng như trẻ lại, từng tán lá lay động trong gió như đồng tình. Cứ như thể nó cũng vui vì có tụi tôi ở đây.
+Thằng Cò hét lên như thủ lĩnh: — Ai chưa thề là gián điệp hết! Cây này là trung tâm chỉ huy, xâm phạm là xử lý tại chỗ!
+Thằng Đen cắm một cái cành nhỏ xuống đất, gật đầu rất nghiêm nghị. Tôi cười thành tiếng. Cái kiểu nghiêm túc bất thường của thằng Đen luôn khiến mọi thứ… trở thành thật.
+Chỉ cần nó gật đầu một cái, dù là trò chơi ngớ ngẩn nhất, tụi tôi cũng tin như thể sắp thành chuyện hệ trọng. Thằng Cò thì như bắt được vàng, hét toáng:
+— Có Đen đồng ý rồi nha! Từ giờ đây là căn cứ tối mật, ai phản bội là bị đày ra bờ ao!
+Nói xong, nó chạy đi vạch một đường tròn quanh gốc ổi bằng mẩu tre rơi. Mỗi khi vạch một vòng, nó lại hô “bảo vệ trung tâm!” làm cả con Huệ cũng phải đứng phắt dậy, cầm chiếc dép tổ ong giơ lên đầu như vũ khí. Con Hiền chẳng nói gì, nhưng tôi thấy nó cười mím, kiểu cười của đứa không muốn bị lôi vào mà rốt cuộc vẫn thấy buồn cười thật.
+Đêm muộn mà bọn tôi vẫn chưa chịu về. Trăng dịch về phía sau nhà, ánh sáng lùi dần, chỉ còn mấy vệt loang lổ rơi rớt trên vai áo, kẽ lá. Có lẽ ở nơi khác, những đứa trẻ cùng tuổi đã ngủ từ lâu, trong nhà có quạt máy, màn cửa, tiếng máy hát êm êm.
+Tôi nằm xuống, tay gối đầu, mắt nhìn lên trời. Bên tai vẫn là tiếng cười rúc rích, tiếng dép lẹp xẹp của con Huệ đang rượt thằng Cò, tiếng con Hiền nói vọng lại “cẩn thận gãy cành ổi đấy!”
+Nhìn qua lũ bạn đang ríu rít quanh gốc cây. Con Huệ vừa giơ dép lên vừa hét “gián điệp!”, thằng Cò thì bò rạp xuống đất như lính trinh sát, còn thằng Đen vẫn giữ gương mặt tỉnh bơ như thể đang thật sự điều khiển một căn cứ mật.
+Tôi không chen vào. Chỉ ngồi đó, tay mân mê cọng cỏ gà, rồi bất giác nói, rất khẽ, như không nhắm tới ai:
+— Hồi ông ngoại tao còn sống, ông hay bảo… cây cũng biết buồn.
+Không khí không lặng xuống, nhưng tôi thấy mấy cái đầu quay về phía mình. Thằng Đen dừng tay. Con Huệ ngẩng lên, gò má còn dính một vệt đất nhỏ. Tôi nói tiếp, vẫn chậm, vẫn đủ để lời bay theo gió rồi đậu xuống dưới gốc ổi:
+— Ông còn bảo, khi cây buồn cây sẽ chẳng ra quả và cây nghe được mình nghĩ gì… nhưng nó không nói lại.
+Không ai trả lời gì. Nhưng cũng chẳng ai phá tiếp trò chơi.
+Tôi đưa tay sờ vào thân cây. Vỏ ổi xù xì, lẫn mùi lá non và mùi hương đêm. Tôi không biết cây có nghe thấy không. Cũng chẳng chắc ông tôi nói đúng hay không. Nhưng tối nay, dưới trăng, giữa tiếng cười nửa thật nửa bịa, tôi tin rằng… có khi cây cũng đang lặng lẽ lắng nghe tất cả.</p>
+<p>Giờ viết những dòng này tôi đang ở một nơi rất khác, Không còn mùi đất, không còn tiếng dép lẹp xẹp của tụi bạn. Tôi làm sao kể được hết những đêm hè sau mưa, tiếng ếch nhái kêu ran và đom đóm lập loè. Làm sao kể được ánh trăng sáng theo từng bước chân trên trên đường làng hay những đêm mất điện, trải chiếu ngoài sân nằm ngắm sao. 
+Kể thế nào về sự vui sướng khi chạy nhảy dưới những cơn mưa rào ào ạt mùa hè. Về những buổi chiều rong chơi ngoài đồng bắt cá, thả diều, đá bóng. Còn cả những bộ phim tuổi thơ, những giờ học trong lớp, những tháng nghỉ hè.
+ Gốc ổi ngày xưa chắc giờ vẫn đứng đó, nhưng chẳng còn ai ngồi bó gối quanh chân nó như năm nào. Tôi không biết tụi nó có còn nhớ cái đêm mất điện ấy không.
+ Chắc là không.
+Mỗi đứa đã lớn lên theo cách riêng, đi về phía nào đó có ánh đèn sáng hơn ánh trăng, có những trò vui khác ngoài một gốc cây già và mấy câu chuyện không đầu không cuối.
+Nhưng tôi thì nhớ.
+Tôi nhớ tiếng lá ổi xào xạc như người đang lắng nghe.
+Nhớ cái bóng của thằng Cò chạy vòng quanh rồi ngồi bệt xuống đất thở hổn hển.
+Nhớ con Huệ nằm co ro như con mèo con trong lớp khăn cũ.
+Nhớ cái cách mình đã tin rằng... chỉ cần ngồi đủ lâu, cây sẽ trả lời.
+Có thể đêm đó chẳng có gì đặc biệt.
+Nhưng đôi khi, những gì không đặc biệt mới là thứ theo ta lâu nhất.
+Và giờ, nếu được một lần quay lại...
+Tôi nghĩ mình sẽ ngồi yên thật lâu dưới gốc ổi ấy, không nói gì.
+Chỉ ngồi thôi, như ngày bé.
+Biết đâu… cây còn nhớ.</p>
+  </div>
+  <div class="chapterNav">
+    <button class="readerNavBtn" data-goto="4">← Chương trước</button>
+    <button class="readerNavBtn light" data-toc>☰ Mục lục</button>
+    
+  </div>
+</section>
+
+        </article>
+      </section>
+
+      <div class="backTop">
+        <a class="btn light" href="../ebook.html">← Về trang Ebook</a>
+      </div>
+    </div>
+  </main>
+
+  <script src="../script.js"></script>
+  <script>
+    const pages = Array.from(document.querySelectorAll(".chapterPage"));
+    const tocLinks = Array.from(document.querySelectorAll(".ebookToc a[data-chapter]"));
+    const progress = document.getElementById("readerProgress");
+    let currentPage = 0;
+    let fontSize = 19;
+
+    function showChapter(index) {
+      if (!pages.length) return;
+      if (index < 0) index = 0;
+      if (index >= pages.length) index = pages.length - 1;
+
+      currentPage = index;
+
+      pages.forEach(page => page.classList.remove("active"));
+      tocLinks.forEach(link => link.classList.remove("active"));
+
+      pages[currentPage].classList.add("active");
+      if (tocLinks[currentPage]) tocLinks[currentPage].classList.add("active");
+      if (progress) progress.textContent = `Đang đọc: ${currentPage + 1} / ${pages.length}`;
+
+      const reader = document.getElementById("reader");
+      if (reader) reader.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    tocLinks.forEach((link, index) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        showChapter(index);
+      });
+    });
+
+    document.querySelectorAll("[data-goto]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        showChapter(Number(btn.dataset.goto));
+      });
+    });
+
+    document.querySelectorAll("[data-toc]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelector(".ebookToc").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    document.getElementById("fontPlus").addEventListener("click", () => {
+      fontSize = Math.min(24, fontSize + 1);
+      document.documentElement.style.setProperty("--reader-font-size", fontSize + "px");
+    });
+
+    document.getElementById("fontMinus").addEventListener("click", () => {
+      fontSize = Math.max(16, fontSize - 1);
+      document.documentElement.style.setProperty("--reader-font-size", fontSize + "px");
+    });
+
+    document.getElementById("darkToggle").addEventListener("click", () => {
+      document.body.classList.toggle("readerDark");
+      document.getElementById("darkToggle").classList.toggle("active");
+    });
+
+    showChapter(0);
+  </script>
+</body>
+</html>

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hãy Đưa Người Trẻ Cây Bút - Tác giả Tịch Lam</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+
+  <style>
+    .ebookShell {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 28px;
+      align-items: start;
+      margin-top: 34px;
+    }
+
+    .ebookToc {
+      position: sticky;
+      top: 95px;
+      background: #fffaf3;
+      border: 1px solid var(--line, #e8d3b8);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 12px 32px rgba(82,44,16,.08);
+    }
+
+    .ebookToc b {
+      display: block;
+      margin-bottom: 14px;
+      font-size: 18px;
+    }
+
+    .ebookToc a {
+      display: block;
+      padding: 11px 12px;
+      border-radius: 10px;
+      color: #54351f;
+      line-height: 1.35;
+      margin-bottom: 6px;
+      transition: .2s;
+      text-decoration: none;
+    }
+
+    .ebookToc a:hover,
+    .ebookToc a.active {
+      background: #f1dfc7;
+      color: #3b220f;
+    }
+
+    .readerTools {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line, #e8d3b8);
+    }
+
+    .toolBtn,
+    .readerNavBtn {
+      border: 1px solid #8a5528;
+      background: transparent;
+      color: #6b3b18;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    .toolBtn.active,
+    .readerNavBtn.primary {
+      background: #7a421d;
+      color: #fff;
+    }
+
+    .ebookReader {
+      min-width: 0;
+    }
+
+    .chapterPage {
+      display: none;
+      background: #fffaf3;
+      border: 1px solid var(--line, #e8d3b8);
+      border-radius: 22px;
+      padding: clamp(28px, 5vw, 58px);
+      box-shadow: 0 18px 44px rgba(82,44,16,.10);
+      scroll-margin-top: 100px;
+    }
+
+    .chapterPage.active {
+      display: block;
+      animation: fadeChapter .25s ease;
+    }
+
+    @keyframes fadeChapter {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .chapterTop {
+      text-align: center;
+      margin-bottom: 34px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid #ead7bd;
+      position: relative;
+    }
+
+    .chapterTop:after {
+      content: "❦";
+      position: absolute;
+      left: 50%;
+      bottom: -14px;
+      transform: translateX(-50%);
+      background: #fffaf3;
+      padding: 0 16px;
+      color: #9a6a3d;
+      font-size: 22px;
+    }
+
+    .chapterTop span {
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      color: #9a6a3d;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .chapterTop h2 {
+      margin: 0;
+      font-size: clamp(32px, 5vw, 50px);
+      line-height: 1.15;
+    }
+
+    .chapterText {
+      max-width: 820px;
+      margin: auto;
+    }
+
+    .chapterText p {
+      font-size: var(--reader-font-size, 19px);
+      line-height: 2.05;
+      margin: 0 0 24px;
+      color: #4f3929;
+      text-align: left;
+    }
+
+    .chapterText .signature {
+      text-align: right;
+      margin-top: 42px;
+      font-style: italic;
+    }
+
+    .chapterNav {
+      max-width: 820px;
+      margin: 48px auto 0;
+      padding-top: 24px;
+      border-top: 1px solid #ead7bd;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .readerProgress {
+      margin-top: 18px;
+      font-size: 14px;
+      color: #6d5644;
+    }
+
+    body.readerDark {
+      background: #201206;
+    }
+
+    body.readerDark .bookPage,
+    body.readerDark .chapterPage,
+    body.readerDark .ebookToc {
+      background: #2a1608;
+      border-color: #5c361c;
+    }
+
+    body.readerDark .chapterText p,
+    body.readerDark .ebookToc a,
+    body.readerDark .readerProgress {
+      color: #f1dfc7;
+    }
+
+    body.readerDark .chapterTop h2,
+    body.readerDark .ebookToc b {
+      color: #fff2dd;
+    }
+
+    body.readerDark .chapterTop:after {
+      background: #2a1608;
+    }
+
+    body.readerDark .toolBtn,
+    body.readerDark .readerNavBtn {
+      color: #f1dfc7;
+      border-color: #c6945d;
+    }
+
+    @media (max-width: 900px) {
+      .ebookShell {
+        grid-template-columns: 1fr;
+      }
+
+      .ebookToc {
+        position: relative;
+        top: 0;
+      }
+
+      .chapterNav {
+        flex-direction: column;
+      }
+
+      .readerNavBtn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="logo" href="../index.html">
+        Tác giả Tịch Lam 🪶
+        <span>Ký ức • Tuổi trẻ • Giấc mơ</span>
+      </a>
+
+      <nav class="menu">
+        <a href="../index.html">Trang chủ</a>
+        <a href="../ebook.html">Ebook</a>
+        <a href="../tac-gia.html">Về tác giả</a>
+        <a href="../doc-gia.html">Cảm nhận độc giả</a>
+      </nav>
+
+      <span class="hamb">☰</span>
+    </div>
+  </header>
+
+  <main class="bookPage">
+    <div class="container">
+
+      <section class="bookIntro">
+        <div class="bigCover">
+          <img src="../images/hay-dua-nguoi-tre-cay-but1.png" alt="Hãy Đưa Người Trẻ Cây Bút">
+        </div>
+
+        <div class="bookInfo">
+          <div class="eyebrow">Tản văn truyền cảm hứng</div>
+          <h1>Hãy Đưa Người Trẻ Cây Bút</h1>
+
+          <p><b>Tác giả:</b> Phan Hải Nam · <b>Bút danh:</b> Tịch Lam</p>
+
+          <p>
+            Đừng đưa cho người trẻ một bản đồ đã được vẽ sẵn. Hãy đưa cho họ một cây bút.
+            Bởi mọi thời đại đều được tạo nên bởi những con người dám suy nghĩ khác,
+            dám bước đi khác và dám viết nên con đường của riêng mình.
+          </p>
+
+          <div class="heroActions">
+            <a class="btn" href="#reader">Đọc từ đầu</a>
+            <a class="btn light" href="../ebook.html">Quay lại Ebook</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="reader" class="readerWrap ebookShell">
+        <aside class="ebookToc">
+          <b>Mục lục</b>
+          <a href="#loi-noi-dau" data-chapter="0">Lời mở đầu</a>
+<a href="#phan-1" data-chapter="1">Phần 1</a>
+<a href="#phan-2" data-chapter="2">Phần 2</a>
+<a href="#phan-3" data-chapter="3">Phần 3</a>
+
+          <div class="readerTools">
+            <button class="toolBtn" id="fontMinus">A-</button>
+            <button class="toolBtn" id="fontPlus">A+</button>
+            <button class="toolBtn" id="darkToggle">Nền tối</button>
+          </div>
+
+          <div class="readerProgress" id="readerProgress">Đang đọc: 1 / 4</div>
+        </aside>
+
+        <article class="ebookReader">
+          
+<section class="chapterPage active" id="loi-noi-dau" data-index="0">
+  <div class="chapterTop">
+    <span>Phần 01</span>
+    <h2>Lời mở đầu</h2>
+  </div>
+  <div class="chapterText">
+    <p>Có một thời gian rất dài, người ta luôn cố gắng dạy người trẻ cách phải sống như thế nào.</p>
+<p>Người ta đưa cho họ những con đường đã được vẽ sẵn.</p>
+<p>Người ta nói đâu là thành công, đâu là thất bại.</p>
+<p>Người ta bảo họ phải học gì, phải trở thành ai, phải đi nhanh đến đâu và phải giống những người nào.</p>
+<p>Nhưng rồi tôi nhận ra một điều.</p>
+<p>Không ai có thể sống thay cuộc đời của người khác.</p>
+<p>Cũng giống như không ai có thể viết tiếp một câu chuyện mà mình chưa từng trải qua.</p>
+<p>Mỗi thế hệ đều sinh ra trong một thời đại khác nhau.</p>
+<p>Những nỗi sợ khác nhau.</p>
+<p>Những giấc mơ khác nhau.</p>
+<p>Những cuộc chiến khác nhau.</p>
+<p>Vậy tại sao chúng ta lại luôn bắt người trẻ phải đi trên những con đường được tạo ra từ quá khứ?</p>
+<p>Tôi không tin rằng người trẻ cần thêm một tấm bản đồ.</p>
+<p>Bởi bản đồ chỉ cho ta biết nơi người khác đã từng đi qua.</p>
+<p>Điều người trẻ cần đôi khi chỉ là một cây bút.</p>
+<p>Một cây bút để ghi lại những điều mình nghĩ.</p>
+<p>Một cây bút để đặt câu hỏi với thế giới.</p>
+<p>Một cây bút để viết lại những điều mà thế hệ trước còn dang dở.</p>
+<p>Và đôi khi, là một cây bút để tự vẽ lấy con đường chưa từng tồn tại.</p>
+<p>Cuốn sách này không được viết ra để dạy ai phải sống thế nào.</p>
+<p>Tôi không có đủ trải nghiệm để trở thành người chỉ đường.</p>
+<p>Tôi cũng không có đáp án cho tất cả những câu hỏi của tuổi trẻ.</p>
+<p>Tôi chỉ là một người đang đi trên hành trình trưởng thành của riêng mình.</p>
+<p>Và trong hành trình ấy, tôi nhận ra rằng những điều làm thay đổi cuộc đời một con người chưa bao giờ là những lời khuyên hoàn hảo.</p>
+<p>Đó thường là một ý nghĩ táo bạo.</p>
+<p>Một lần dám bắt đầu.</p>
+<p>Một lần dám thất bại.</p>
+<p>Một lần dám khác biệt.</p>
+<p>Nếu cuốn sách này có thể mang lại điều gì đó cho bạn, tôi hy vọng đó không phải là câu trả lời.</p>
+<p>Tôi hy vọng nó sẽ giúp bạn có thêm can đảm để đi tìm câu trả lời của riêng mình.</p>
+<p>Bởi tương lai không được tạo ra bởi những người chỉ biết đi theo dấu chân cũ.</p>
+<p>Tương lai được tạo ra bởi những người dám cầm lấy cây bút và viết nên trang đầu tiên của con đường mới.</p>
+<p class="signature">— Tịch Lam</p>
+  </div>
+  <div class="chapterNav">
+    
+    <button class="readerNavBtn light" data-toc>☰ Mục lục</button>
+    <button class="readerNavBtn primary" data-goto="1">Phần sau →</button>
+  </div>
+</section>
+
+<section class="chapterPage " id="phan-1" data-index="1">
+  <div class="chapterTop">
+    <span>Phần 02</span>
+    <h2>Phần 1</h2>
+  </div>
+  <div class="chapterText">
+    <p>Nội dung phần 1 sẽ được cập nhật sau.</p>
+  </div>
+  <div class="chapterNav">
+    <button class="readerNavBtn" data-goto="0">← Phần trước</button>
+    <button class="readerNavBtn light" data-toc>☰ Mục lục</button>
+    <button class="readerNavBtn primary" data-goto="2">Phần sau →</button>
+  </div>
+</section>
+
+<section class="chapterPage " id="phan-2" data-index="2">
+  <div class="chapterTop">
+    <span>Phần 03</span>
+    <h2>Phần 2</h2>
+  </div>
+  <div class="chapterText">
+    <p>Nội dung phần 2 sẽ được cập nhật sau.</p>
+  </div>
+  <div class="chapterNav">
+    <button class="readerNavBtn" data-goto="1">← Phần trước</button>
+    <button class="readerNavBtn light" data-toc>☰ Mục lục</button>
+    <button class="readerNavBtn primary" data-goto="3">Phần sau →</button>
+  </div>
+</section>
+
+<section class="chapterPage " id="phan-3" data-index="3">
+  <div class="chapterTop">
+    <span>Phần 04</span>
+    <h2>Phần 3</h2>
+  </div>
+  <div class="chapterText">
+    <p>Nội dung phần 3 sẽ được cập nhật sau.</p>
+  </div>
+  <div class="chapterNav">
+    <button class="readerNavBtn" data-goto="2">← Phần trước</button>
+    <button class="readerNavBtn light" data-toc>☰ Mục lục</button>
+    
+  </div>
+</section>
+
+        </article>
+      </section>
+
+      <div class="backTop">
+        <a class="btn light" href="../ebook.html">← Về trang Ebook</a>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="../script.js"></script>
+  <script>
+    const pages = Array.from(document.querySelectorAll(".chapterPage"));
+    const tocLinks = Array.from(document.querySelectorAll(".ebookToc a[data-chapter]"));
+    const progress = document.getElementById("readerProgress");
+    let currentPage = 0;
+    let fontSize = 19;
+
+    function showChapter(index) {
+      if (!pages.length) return;
+      if (index < 0) index = 0;
+      if (index >= pages.length) index = pages.length - 1;
+
+      currentPage = index;
+
+      pages.forEach(page => page.classList.remove("active"));
+      tocLinks.forEach(link => link.classList.remove("active"));
+
+      pages[currentPage].classList.add("active");
+      if (tocLinks[currentPage]) tocLinks[currentPage].classList.add("active");
+      if (progress) progress.textContent = `Đang đọc: ${currentPage + 1} / ${pages.length}`;
+
+      const reader = document.getElementById("reader");
+      if (reader) reader.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    tocLinks.forEach((link, index) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        showChapter(index);
+      });
+    });
+
+    document.querySelectorAll("[data-goto]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        showChapter(Number(btn.dataset.goto));
+      });
+    });
+
+    document.querySelectorAll("[data-toc]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelector(".ebookToc").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    document.getElementById("fontPlus").addEventListener("click", () => {
+      fontSize = Math.min(24, fontSize + 1);
+      document.documentElement.style.setProperty("--reader-font-size", fontSize + "px");
+    });
+
+    document.getElementById("fontMinus").addEventListener("click", () => {
+      fontSize = Math.max(16, fontSize - 1);
+      document.documentElement.style.setProperty("--reader-font-size", fontSize + "px");
+    });
+
+    document.getElementById("darkToggle").addEventListener("click", () => {
+      document.body.classList.toggle("readerDark");
+      document.getElementById("darkToggle").classList.toggle("active");
+    });
+
+    showChapter(0);
+  </script>
+</body>
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tác giả Tịch Lam</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="logo" href="index.html">
+        Tác giả Tịch Lam 🪶
+        <span>Ký ức • Tuổi trẻ • Giấc mơ</span>
+      </a>
+
+   <nav class="menu">
+  <a href="index.html">Trang chủ</a>
+  <a href="ebook.html">Ebook</a>
+  <a href="tac-gia.html">Về tác giả</a>
+  <a href="doc-gia.html">Cảm nhận độc giả</a>
+</nav>
+
+      <span class="hamb">☰</span>
+    </div>
+  </header>
+
+  <main id="home">
+
+   <!-- HERO SLIDER -->
+<section class="hero-slider">
+  <button class="slide-btn prev" onclick="changeSlide(-1)">‹</button>
+
+  <div class="slide active">
+    <div class="slide-text">
+      <div class="eyebrow">Tác phẩm nổi bật</div>
+      <h1>Những Mùa Hè Không Trở Lại</h1>
+      <p>
+        Có những ký ức càng đi xa càng trở nên trong trẻo. Chúng nằm lại đâu đó giữa những năm tháng đã qua, âm thầm sống trong tiếng ve, trong màu nắng cũ và trong những gương mặt từng rất thân quen.
+      </p>
+      <div class="heroActions">
+        <a class="btn" href="books/nhung-mua-he-khong-tro-lai.html">Đọc ebook</a>
+        <a class="btn light" href="#books">Khám phá sách</a>
+      </div>
+    </div>
+
+    <div class="slide-art showcase-art">
+      <img src="images/hero-nhung-mua-he.png" alt="Những Mùa Hè Không Trở Lại">
+    </div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-text">
+      <div class="eyebrow">Tác phẩm nổi bật</div>
+      <h1>Dưới Bầu Trời Năm Ấy</h1>
+      <p>
+        Không phải mọi cuộc chia xa đều bắt đầu bằng nước mắt. Có những người lặng lẽ rời khỏi tuổi trẻ của chúng ta, để lại phía sau một bầu trời đầy kỷ niệm.
+      </p>
+      <div class="heroActions">
+        <a class="btn" href="books/duoi-bau-troi-nam-ay.html">Đọc ebook</a>
+        <a class="btn light" href="#books">Khám phá sách</a>
+      </div>
+    </div>
+
+    <div class="slide-art showcase-art">
+      <img src="images/hero-duoi-bau-troi.png" alt="Dưới Bầu Trời Năm Ấy">
+    </div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-text">
+      <div class="eyebrow">Tác phẩm nổi bật</div>
+      <h1>Ký Ức Trong Ngăn Tủ</h1>
+      <p>
+        Có những lá thư được viết ra nhưng không bao giờ được gửi đi. Có những lời thích ai đó được giấu kín suốt cả tuổi học trò.
+      </p>
+      <div class="heroActions">
+        <a class="btn" href="books/ky-uc-trong-ngan-tu.html">Đọc ebook</a>
+        <a class="btn light" href="#books">Khám phá sách</a>
+      </div>
+    </div>
+
+    <div class="slide-art showcase-art">
+      <img src="images/hero-ky-uc-ngan-tu.png" alt="Ký Ức Trong Ngăn Tủ">
+    </div>
+  </div>
+
+  <div class="slide">
+    <div class="slide-text">
+      <div class="eyebrow">Tác phẩm nổi bật</div>
+      <h1>Hãy Đưa Người Trẻ Cây Bút</h1>
+      <p>
+        Đừng đưa cho người trẻ một bản đồ đã được vẽ sẵn. Hãy đưa cho họ một cây bút. Bởi mọi thời đại đều được tạo nên bởi những con người dám viết nên con đường của riêng mình.
+      </p>
+      <div class="heroActions">
+        <a class="btn" href="books/hay-dua-nguoi-tre-cay-but.html">Đọc ebook</a>
+        <a class="btn light" href="#books">Khám phá sách</a>
+      </div>
+    </div>
+
+    <div class="slide-art showcase-art">
+      <img src="images/hero-hay-dua-nguoi-tre.png" alt="Hãy Đưa Người Trẻ Cây Bút">
+    </div>
+  </div>
+
+  <button class="slide-btn next" onclick="changeSlide(1)">›</button>
+
+  <div class="slide-dots">
+    <span class="dot active" onclick="goToSlide(0)"></span>
+    <span class="dot" onclick="goToSlide(1)"></span>
+    <span class="dot" onclick="goToSlide(2)"></span>
+    <span class="dot" onclick="goToSlide(3)"></span>
+  </div>
+</section>
+
+    <!-- BOOKS -->
+    <section id="books" class="section">
+      <div class="container">
+        <div class="sectionHead">
+          <div>
+          <div class="eyebrow">THƯ VIỆN TÁC PHẨM</div>
+<h2>Những miền ký ức được giữ lại bằng chữ</h2>
+<p>
+Mỗi cuốn sách là một hành trình khác nhau, từ tuổi thơ, tuổi trẻ đến những giấc mơ và những điều chưa từng kịp nói thành lời.
+</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <article class="card">
+            <div class="cover">
+  <div class="bookMockup">
+    <img src="images/nhung-mua-he.png" alt="Những Mùa Hè Không Trở Lại">
+  </div>
+</div>
+            <div class="cardBody">
+              <h3>Những Mùa Hè Không Trở Lại</h3>
+              <p>
+Có những ký ức càng đi xa càng trở nên trong trẻo. Chúng nằm lại đâu đó giữa những năm tháng đã qua, âm thầm sống trong tiếng ve, trong màu nắng cũ và trong những gương mặt từng rất thân quen. "Những Mùa Hè Không Trở Lại" là một lời nhắc nhẹ nhàng rằng tuổi thơ có thể đã ở lại phía sau, nhưng những điều đẹp đẽ nhất của nó thì chưa bao giờ rời đi.
+</p>
+              <div class="tags">
+                <span class="tag">Tiểu thuyết</span>
+                <span class="tag">Ebook</span>
+              </div>
+              <div class="cardBtns">
+                <a class="btn" href="books/nhung-mua-he-khong-tro-lai.html">Đọc tác phẩm</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="cover">
+  <div class="bookMockup">
+    <img src="images/duoi-bau-troi.png" alt="Dưới Bầu Trời Năm Ấy">
+  </div>
+</div>
+            <div class="cardBody">
+              <h3>Dưới Bầu Trời Năm Ấy</h3>
+              <p>
+  Không phải mọi cuộc chia xa đều bắt đầu bằng nước mắt. Có những người lặng lẽ rời khỏi tuổi trẻ của chúng ta, để lại phía sau một bầu trời đầy kỷ niệm. "Dưới Bầu Trời Năm Ấy" là lời gửi lại cho những năm tháng đã qua, cho những người từng đồng hành và cho chính chúng ta của ngày còn chưa biết thế nào là tiếc nuối.
+</p>
+              <div class="tags">
+                <span class="tag">Hồi ký</span>
+                <span class="tag">Ebook</span>
+              </div>
+              <div class="cardBtns">
+                <a class="btn" href="books/duoi-bau-troi-nam-ay.html">Đọc tác phẩm</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="cover">
+  <div class="bookMockup">
+    <img src="images/ky-uc-trong-ngan-tu.png" alt="Ký Ức Trong Ngăn Tủ">
+  </div>
+</div>
+            <div class="cardBody">
+              <h3>Ký Ức Trong Ngăn Tủ</h3>
+              <p>
+  Có những lá thư được viết ra nhưng không bao giờ được gửi đi. Có những lời thích ai đó được giấu kín suốt cả tuổi học trò. "Ký Ức Trong Ngăn Tủ" là câu chuyện về những bức thư chưa từng trao, một tờ giấy nhỏ bị bỏ quên từ ngày cuối cấp và một mối tình chỉ được nhận ra khi mọi thứ đã quá muộn.
+</p>
+              <div class="tags">
+                <span class="tag">Tiểu thuyết </span>
+                <span class="tag">Ebook</span>
+              </div>
+              <div class="cardBtns">
+                <a class="btn" href="books/ky-uc-trong-ngan-tu.html">Đọc tác phẩm</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="cover">
+  <div class="bookMockup">
+    <img src="images/hay-dua-nguoi-tre-cay-but.png" alt="Hãy Đưa Người Trẻ Cây Bút">
+  </div>
+</div>
+            <div class="cardBody">
+              <h3>Hãy Đưa Người Trẻ Cây Bút</h3>
+              <p>
+Đừng đưa cho người trẻ một bản đồ đã được vẽ sẵn. Hãy đưa cho họ một cây bút. Bởi mọi thời đại đều được tạo nên bởi những con người dám suy nghĩ khác, dám bước đi khác và dám viết nên con đường của riêng mình. "Hãy Đưa Người Trẻ Cây Bút" là lời nhắn gửi dành cho những người đang bắt đầu hành trình ấy.
+</p>
+              <div class="tags">
+                <span class="tag">Truyền cảm hứng</span>
+                <span class="tag">Ebook</span>
+              </div>
+              <div class="cardBtns">
+                <a class="btn" href="books/hay-dua-nguoi-tre-cay-but.html">Đọc tác phẩm</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="author-showcase">
+  <div class="container author-showcase-grid">
+
+    <div class="author-text">
+      <div class="eyebrow">Về tác giả</div>
+      <h2>Phan Hải Nam</h2>
+      <p>
+        “Văn chương đẹp nhất không phải là khi người ta đọc được câu chuyện của người viết,
+  mà là khi người ta nhìn thấy chính mình trong những dòng chữ ấy.”
+      </p>
+      <a class="btn" href="tac-gia.html">Tìm hiểu thêm về tác giả</a>
+    </div>
+
+   <div class="authorPhoto">
+    <div class="polaroid">
+        <img src="images/tac-gia.jpg" alt="Phan Hải Nam">
+        <span class="signature">Phan Hải Nam</span>
+    </div>
+</div>
+
+    <div class="author-side">
+      <div class="reader-quote">
+        <div class="eyebrow">Cảm nhận độc giả</div>
+        <blockquote>
+    “Tôi đã thấy tuổi thơ mình đâu đó trong những trang sách này.
+    Nơi có sự tự do, những giấc mơ rất nhỏ và những ngày tháng mà đi hết cả tuổi trẻ rồi vẫn muốn quay về.”
+</blockquote>
+
+<p>— Tạ Kim Huệ</p>
+      </div>
+
+      <div class="newsletter-box">
+        <div class="eyebrow">Đăng ký nhận tin</div>
+        <p>Nhận thông tin về sách mới, ưu đãi và những bài viết mới nhất từ Tác giả Tịch Lam.</p>
+
+        <form action="https://formspree.io/f/xykqgarj" method="POST" class="newsletterForm">
+
+    <input
+        type="text"
+        name="name"
+        placeholder="Họ và tên"
+        required
+    >
+
+    <input
+        type="email"
+        name="email"
+        placeholder="Nhập email của bạn"
+        required
+    >
+
+    <button type="submit" class="btn">
+        Đăng ký
+    </button>
+
+</form>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+    <!-- AUTHOR -->
+   
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+
+        <div class="footer-brand">
+            <h3>Tác giả Tịch Lam</h3>
+            <p>Lượm nhặt kí ức, vẽ lại bầu trời</p>
+            <small>© 2026 Tác giả Tịch Lam. All rights reserved.</small>
+        </div>
+
+        <div class="footer-links">
+            <h4>Về chúng tôi</h4>
+            <a href="#author">Về tác giả</a>
+            <a href="#books">Sách mới</a>
+        </div>
+
+        <div class="footer-links">
+            <h4>Hỗ trợ</h4>
+            <a href="mailto:tacgiatichlam@gmail.com">Liên hệ</a>
+            <a href="#books">Các tác phẩm</a>
+        </div>
+
+        <div class="footer-links">
+            <h4>Kết nối với tôi</h4>
+
+            <a href="mailto:tacgiatichlam@gmail.com">
+                📧 tacgiatichlam@gmail.com
+            </a>
+
+            <a href="https://www.facebook.com/tacgiatichlam/" target="_blank">
+                📘 Facebook Tịch Lam
+            </a>
+        </div>
+
+    </div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>

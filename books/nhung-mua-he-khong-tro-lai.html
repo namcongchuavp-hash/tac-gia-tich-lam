@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Những Mùa Hè Không Trở Lại - Tác giả Tịch Lam</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+
+  <style>
+    .ebookShell {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 28px;
+      align-items: start;
+      margin-top: 34px;
+    }
+
+    .ebookToc {
+      position: sticky;
+      top: 95px;
+      background: #fffaf3;
+      border: 1px solid var(--line, #e8d3b8);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 12px 32px rgba(82,44,16,.08);
+    }
+
+    .ebookToc b {
+      display: block;
+      margin-bottom: 14px;
+      font-size: 18px;
+    }
+
+    .ebookToc a {
+      display: block;
+      padding: 11px 12px;
+      border-radius: 10px;
+      color: #54351f;
+      line-height: 1.35;
+      margin-bottom: 6px;
+      transition: .2s;
+    }
+
+    .ebookToc a:hover,
+    .ebookToc a.active {
+      background: #f1dfc7;
+      color: #3b220f;
+    }
+
+    .readerTools {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line, #e8d3b8);
+    }
+
+    .toolBtn,
+    .readerNavBtn {
+      border: 1px solid #8a5528;
+      background: transparent;
+      color: #6b3b18;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    .toolBtn.active,
+    .readerNavBtn.primary {
+      background: #7a421d;
+      color: #fff;
+    }
+
+    .ebookReader {
+      min-width: 0;
+    }
+
+    .chapterPage {
+      display: none;
+      background: #fffaf3;
+      border: 1px solid var(--line, #e8d3b8);
+      border-radius: 22px;
+      padding: clamp(28px, 5vw, 58px);
+      box-shadow: 0 18px 44px rgba(82,44,16,.10);
+      scroll-margin-top: 100px;
+    }
+
+    .chapterPage.active {
+      display: block;
+      animation: fadeChapter .25s ease;
+    }
+
+    @keyframes fadeChapter {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .chapterTop {
+      text-align: center;
+      margin-bottom: 34px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid #ead7bd;
+      position: relative;
+    }
+
+    .chapterTop:after {
+      content: "❦";
+      position: absolute;
+      left: 50%;
+      bottom: -14px;
+      transform: translateX(-50%);
+      background: #fffaf3;
+      padding: 0 16px;
+      color: #9a6a3d;
+      font-size: 22px;
+    }
+
+    .chapterTop span {
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      color: #9a6a3d;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .chapterTop h2 {
+      margin: 0;
+      font-size: clamp(32px, 5vw, 50px);
+      line-height: 1.15;
+    }
+
+    .chapterText {
+      max-width: 820px;
+      margin: auto;
+    }
+
+    .chapterText p {
+      font-size: var(--reader-font-size, 19px);
+      line-height: 2.05;
+      margin: 0 0 24px;
+      color: #4f3929;
+      text-align: left;
+    }
+
+    .chapterNav {
+      max-width: 820px;
+      margin: 48px auto 0;
+      padding-top: 24px;
+      border-top: 1px solid #ead7bd;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .readerProgress {
+      margin-top: 18px;
+      font-size: 14px;
+      color: #6d5644;
+    }
+
+    body.readerDark {
+      background: #201206;
+    }
+
+    body.readerDark .bookPage,
+    body.readerDark .chapterPage,
+    body.readerDark .ebookToc {
+      background: #2a1608;
+      border-color: #5c361c;
+    }
+
+    body.readerDark .chapterText p,
+    body.readerDark .ebookToc a,
+    body.readerDark .readerProgress {
+      color: #f1dfc7;
+    }
+
+    body.readerDark .chapterTop h2,
+    body.readerDark .ebookToc b {
+      color: #fff2dd;
+    }
+
+    body.readerDark .chapterTop:after {
+      background: #2a1608;
+    }
+
+    body.readerDark .toolBtn,
+    body.readerDark .readerNavBtn {
+      color: #f1dfc7;
+      border-color: #c6945d;
+    }
+
+    @media (max-width: 900px) {
+      .ebookShell {
+        grid-template-columns: 1fr;
+      }
+
+      .ebookToc {
+        position: relative;
+        top: 0;
+      }
+
+      .chapterNav {
+        flex-direction: column;
+      }
+
+      .readerNavBtn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<header class="topbar">
+  <div class="container nav">
+    <a class="logo" href="../index.html">
+      Tác giả Tịch Lam
+      <span>Ký ức • Tuổi trẻ • Giấc mơ</span>
+    </a>
+
+    <nav class="menu">
+      <a href="../index.html">Trang chủ</a>
+      <a href="../ebook.html">Ebook</a>
+      <a href="../tac-gia.html">Về tác giả</a>
+      <a href="../doc-gia.html">Cảm nhận độc giả</a>
+    </nav>
+
+    <span class="hamb">☰</span>
+  </div>
+</header>
+
+<main class="bookPage">
+  <div class="container">
+
+    <section class="bookIntro">
+      <div class="bigCover">
+        <img src="../images/nhung-mua-he1.png" alt="Những Mùa Hè Không Trở Lại">
+      </div>
+
+      <div class="bookInfo">
+        <div class="eyebrow">Hồi ký tuổi thơ</div>
+        <h1>Những Mùa Hè Không Trở Lại</h1>
+
+        <p><b>Tác giả:</b> Phan Hải Nam · <b>Bút danh:</b> Tịch Lam</p>
+
+        <p>
+          Có những ký ức càng đi xa càng trở nên trong trẻo. Chúng nằm lại đâu đó giữa những năm tháng đã qua,
+          âm thầm sống trong tiếng ve, trong màu nắng cũ và trong những gương mặt từng rất thân quen.
+          "Những Mùa Hè Không Trở Lại" là một lời nhắc nhẹ nhàng rằng tuổi thơ có thể đã ở lại phía sau,
+          nhưng những điều đẹp đẽ nhất của nó thì chưa bao giờ rời đi.
+        </p>
+
+        <div class="heroActions">
+          <a class="btn" href="#reader">Đọc từ đầu</a>
+          <a class="btn light" href="../ebook.html">Quay lại Ebook</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="reader" class="readerWrap ebookShell">
+      <aside class="ebookToc">
+        <b>Mục lục</b>
+        <a href="#loi-mo-dau" data-chapter="0">Lời mở đầu</a>
+<a href="#chuong-1" data-chapter="1">Chương 1: Mùa Hè Bắt Đầu</a>
+
+        <div class="readerTools">
+          <button class="toolBtn" id="fontMinus">A-</button>
+          <button class="toolBtn" id="fontPlus">A+</button>
+          <button class="toolBtn" id="darkToggle">Nền tối</button>
+        </div>
+
+        <div class="readerProgress" id="readerProgress">Đang đọc: 1 / 2</div>
+      </aside>
+
+      <article class="ebookReader">
+        
+<section class="chapterPage active" id="loi-mo-dau" data-index="0">
+  <div class="chapterTop">
+    <span>Phần 01</span>
+    <h2>Lời mở đầu</h2>
+  </div>
+  <div class="chapterText">
+    <p>Tôi không nhớ chính xác tuổi thơ mình bắt đầu từ khi nào.</p>
+<p>Có lẽ là từ những buổi trưa nằm trên chiếc chõng tre nghe tiếng quạt mo cau kẽo kẹt. Có lẽ là từ những lần chân trần chạy trên con đường đất nóng bỏng giữa trưa hè. Cũng có thể là từ mùi khói rơm mỗi chiều bay lên từ những cánh đồng sau vụ gặt.</p>
+<p>Ký ức của một đứa trẻ vốn chẳng bao giờ bắt đầu bằng những điều lớn lao.</p>
+<p>Nó thường bắt đầu bằng những thứ rất nhỏ.</p>
+<p>Một cái cây.</p>
+<p>Một con đường.</p>
+<p>Một tiếng gọi.</p>
+<p>Một người bạn.</p>
+<p>Tôi sinh ra và lớn lên ở một ngôi làng nhỏ. Nơi đó không có những con đường rộng, không có những tòa nhà cao tầng và cũng chẳng có gì đặc biệt để người ta phải tìm đến. Người trong làng sống chủ yếu bằng nghề mây tre đan, bằng ruộng đồng, bằng những con sông và ao hồ đã tồn tại từ rất lâu trước khi tôi được sinh ra.</p>
+<p>Ngày ấy tôi không biết quê mình nghèo hay giàu.</p>
+<p>Tôi chỉ biết mỗi sáng thức dậy đều nghe tiếng người lớn gọi nhau đi làm. Biết rằng chiều nào lũ trẻ trong xóm cũng sẽ tìm thấy nhau ở một góc nào đó. Và biết rằng mùa hè là khoảng thời gian đẹp nhất trong năm.</p>
+<p>Mùa hè ngày ấy dài lắm.</p>
+<p>Dài đến mức tôi từng nghĩ nó sẽ không bao giờ kết thúc.</p>
+<p>Buổi sáng đi lang thang ngoài đồng. Buổi trưa trốn ngủ. Buổi chiều tụ tập dưới gốc cây hoặc chạy khắp xóm. Buổi tối nằm ngoài sân đếm sao trời đến khi ngủ quên lúc nào chẳng biết.</p>
+<p>Những ngày tháng ấy cứ lặp đi lặp lại.</p>
+<p>Bình thường đến mức chẳng ai nghĩ sẽ có lúc phải nhớ về nó.</p>
+<p>Trong những mùa hè đó có những người bạn đã đi cùng tôi qua một đoạn tuổi thơ rất đẹp.</p>
+<p>Có thằng Đen.</p>
+<p>Có con Hiền.</p>
+<p>Có thằng Cò.</p>
+<p>Có con Huệ.</p>
+<p>Và có tôi.</p>
+<p>Ngày đó chúng tôi chẳng có gì trong tay ngoài thời gian.</p>
+<p>Không điện thoại.</p>
+<p>Không internet.</p>
+<p>Không những món đồ chơi đắt tiền.</p>
+<p>Nhưng lại có cả một cánh đồng để chạy, một dòng sông để nghịch nước, một rừng tre để trốn nắng và hàng trăm trò chơi mà bây giờ nghĩ lại tôi cũng không hiểu vì sao mình có thể vui đến thế.</p>
+<p>Nhiều năm đã trôi qua.</p>
+<p>Có những người vẫn còn gặp lại.</p>
+<p>Có những người đã lâu không còn liên lạc.</p>
+<p>Có những chuyện tôi nhớ rất rõ.</p>
+<p>Cũng có những chuyện chỉ còn lại vài mảnh vụn ký ức.</p>
+<p>Nhưng mỗi lần nghĩ về tuổi thơ, trong đầu tôi luôn hiện lên những buổi chiều mùa hè.</p>
+<p>Những buổi chiều có nắng.</p>
+<p>Có gió.</p>
+<p>Có tiếng cười.</p>
+<p>Có những đứa trẻ đang vô tư lớn lên mà không hề biết rằng một ngày nào đó, tất cả sẽ chỉ còn là ký ức.</p>
+<p>Tôi viết cuốn sách này không phải vì tuổi thơ của mình đặc biệt.</p>
+<p>Tôi viết vì sợ mình quên mất.</p>
+<p>Sợ một ngày nào đó tôi không còn nhớ rõ khuôn mặt của những người bạn năm ấy.</p>
+<p>Không còn nhớ tiếng ve trên những tán cây đầu hè.</p>
+<p>Không còn nhớ con đường đất dẫn ra cánh đồng.</p>
+<p>Không còn nhớ cảm giác được sống trong những ngày vô tư nhất cuộc đời.</p>
+<p>Nếu một ngày nào đó tôi già đi, và những ký ức bắt đầu mờ dần như những bức ảnh cũ, tôi hy vọng mình vẫn có thể mở cuốn sách này ra.</p>
+<p>Để nhớ rằng đã từng có một khoảng thời gian đẹp như thế.</p>
+<p>Một khoảng thời gian mang tên tuổi thơ.</p>
+<p>Và những mùa hè ấy...</p>
+<p>Sẽ không bao giờ trở lại.</p>
+  </div>
+  <div class="chapterNav">
+    
+    <button class="readerNavBtn light" data-toc>☰ Mục lục</button>
+    <button class="readerNavBtn primary" data-goto="1">Phần sau →</button>
+  </div>
+</section>
+
+<section class="chapterPage " id="chuong-1" data-index="1">
+  <div class="chapterTop">
+    <span>Phần 02</span>
+    <h2>Chương 1: Mùa Hè Bắt Đầu</h2>
+  </div>
+  <div class="chapterText">
+    <p>Mùa hè năm tôi tám tuổi, thứ tôi ghét nhất trên đời là ngủ trưa.</p>
+<p>Đến bây giờ tôi vẫn không hiểu tại sao người lớn lại tin rằng một đứa trẻ có thể ngủ được vào những ngày hè như thế. Ngoài trời nắng vàng như mật, tiếng ve kêu râm ran trên những tán cây từ sáng đến tối, bạn bè đang chạy khắp xóm, còn cả thế giới dường như đang ở ngoài kia chờ mình khám phá. Vậy mà sau bữa cơm trưa, tất cả bọn trẻ trong làng đều bị lùa về nhà như một đàn vịt, đứa nào đứa nấy phải nằm im trên giường hoặc trên chõng tre, nhắm mắt ngủ cho tới khi mặt trời dịu bớt.</p>
+<p>Nhà tôi nằm ở giữa làng. Đó là một ngôi nhà ngói đỏ với khoảng sân gạch đã cũ. Mỗi lần trời mưa, nước đọng lại giữa các khe gạch rồi vài hôm sau rêu xanh bắt đầu mọc lên. Hồi nhỏ tôi rất thích ngồi nhìn những mảng rêu ấy. Chúng khiến tôi có cảm giác như mình đang nhìn xuống một khu rừng thu nhỏ, nơi lũ kiến là những người khổng lồ đang băng qua những ngọn núi xanh mướt. Trước sân có hai cây xoài và một cây ổi già. Cây ổi ấy có mặt ở đó từ trước khi tôi sinh ra. Nó già đến mức chẳng ai trong nhà nhớ nổi tuổi của nó nữa. Những cành cây xù xì vươn ngang ra bốn phía, che mát gần nửa khoảng sân mỗi khi chiều xuống.</p>
+<p>Hôm ấy, sau bữa cơm trưa, mẹ trải chiếu trên chiếc chõng tre giữa nhà rồi bảo tôi đi ngủ như mọi ngày. Ngoài hiên, bố mẹ đã bắt đầu làm việc trở lại. Trước mặt họ là những bó tre đã được chẻ sẵn từ sáng. Mẹ tôi ngồi đan rổ, còn Bố chẻ nan. Những động tác ấy lặp đi lặp lại mỗi ngày đến mức tôi từng có cảm giác bố mẹ mình sinh ra đã biết làm nghề mây tre đan. Thực ra không chỉ bố mẹ tôi. Cả làng tôi đều như thế. Buổi trưa đi dọc từ đầu làng tới cuối xóm, người ta sẽ thấy những người đàn ông ngồi vót tre trước hiên nhà, những người phụ nữ vừa làm việc vừa trò chuyện dưới bóng râm. Nhà này gọi vọng sang nhà kia. Tiếng cười thỉnh thoảng lại vang lên giữa cái nắng chang chang. Có cảm giác như cả ngôi làng đang cùng thức, chỉ riêng lũ trẻ là bị ép phải ngủ.</p>
+<p>Tôi nằm trên chõng tre, mắt nhắm hờ nhưng tai vẫn lắng nghe mọi thứ bên ngoài. Tiếng dao chẻ nan vang lên lách cách. Tiếng đóng thúng mủng từ một ngôi nhà nào đó vọng lại. Xa hơn là tiếng người gọi nhau ngoài ngõ. Và phủ lên tất cả là tiếng ve mùa hè. Tiếng ve nhiều đến mức có những hôm tôi ngỡ như cả bầu trời đang rung lên. Tôi trở mình lần thứ nhất. Rồi lần thứ hai. Rồi lần thứ ba. Càng cố ngủ tôi càng tỉnh. Trong đầu chỉ nghĩ tới bãi bắn bi sau đình làng, tới thằng Đen, thằng Cò và đám bạn chắc lúc này đã tụ tập đông đủ dưới gốc sà cừ.</p>
+<p>Đúng lúc ấy, từ đầu ngõ vang lên một tiếng huýt sáo quen thuộc. Âm thanh ấy ngắn rồi kéo dài thêm một nhịp nữa. Tôi mở bừng mắt. Chẳng cần nhìn cũng biết là thằng Đen. Trong cả cái làng này, chỉ có nó mới huýt sáo theo cái kiểu kỳ quặc như thế. Tôi khẽ ngồi dậy rồi ghé mắt nhìn qua khung cửa. Quả nhiên, dưới bóng tre đầu ngõ là hai cái đầu đang lấp ló. Thằng Đen đứng phía trước, còn thằng Cò đứng phía sau. Cả hai đứa đều đang ngó nghiêng về phía nhà tôi với vẻ mặt sốt ruột như thể nếu chậm thêm vài phút nữa thì trận bắn bi ngoài đình làng sẽ kết thúc mất.</p>
+<p>Tôi đưa tay ra hiệu.</p>
+<p>Thằng Cò lập tức vẫy vẫy như sợ tôi không nhìn thấy. Nó còn chỉ tay về phía cuối làng rồi làm bộ mặt nhăn nhó, ý bảo bọn kia đang đợi lâu lắm rồi. Trong khi đó, thằng Đen vẫn đứng yên. Nó chỉ nhìn tôi rồi hất nhẹ đầu một cái.</p>
+<p>Chỉ thế thôi là đủ.</p>
+<p>Trong đám bạn của tôi, thằng Đen luôn như vậy. Nó ít nói đến mức nhiều khi tôi tự hỏi không biết một ngày nó có dùng hết nổi một trăm từ hay không. Nhưng lạ ở chỗ, những lúc cần hiểu nhau thì chẳng cần nói gì nhiều.</p>
+<p>Tôi nhìn ra ngoài ngõ rồi lại nhìn về phía hiên nhà. Bố vẫn đang chẻ nan. Mẹ tôi vẫn cúi đầu bên chiếc rổ đang còn đan dở.</p>
+<p>Tiếng dao tách những thanh tre thành từng sợi nan mỏng vang lên đều đều. Thỉnh thoảng bố lại dùng sống dao gõ nhẹ vào khung tre để chỉnh lại cho đều. Những âm thanh ấy quen thuộc đến mức tưởng như chẳng bao giờ dứt.</p>
+<p>Tôi chờ thêm một lúc nữa.</p>
+<p>Rồi lại một lúc nữa.</p>
+<p>Ngoài kia, thằng Cò bắt đầu sốt ruột. Nó nhặt một cục đất nhỏ ném về phía cổng nhà tôi. Cục đất rơi xuống đường, lăn thêm vài vòng rồi nằm im.</p>
+<p>Tôi lườm nó.</p>
+<p>Nó cười toe toét.</p>
+<p>Nếu không phải vì đang bị nhốt trong nhà, có lẽ tôi đã chạy ra đấm cho nó một cái.</p>
+<p>Tiếng ve vẫn kêu râm ran trên những tán cây. Một cơn gió nóng lùa qua cửa mang theo mùi tre mới chẻ từ ngoài hiên vào. Tôi quay đầu nhìn mẹ lần nữa. Bà đang cúi xuống lựa những sợi nan bố vừa chẻ xong, hoàn toàn không để ý tới tôi.</p>
+<p>Đó là cơ hội.</p>
+<p>Tôi nhẹ nhàng chống tay xuống chõng rồi bước chân xuống nền nhà. Từng động tác đều chậm tới mức chính tôi cũng thấy sốt ruột. Hồi ấy tôi luôn tin rằng chỉ cần mình đi đủ nhẹ thì người lớn sẽ không phát hiện được.</p>
+<p>Sau này nghĩ lại, tôi nghi ngờ rằng người lớn biết hết.</p>
+<p>Họ chỉ giả vờ không biết mà thôi.</p>
+<p>Tôi đi ngang qua chiếc bàn gỗ giữa nhà. Trên bàn vẫn còn chiếc bát nước chè bố uống dở sau bữa cơm trưa. Tôi khựng lại vài giây rồi tiếp tục bước đi.</p>
+<p>Khoảng cách từ chõng tre tới cửa nhà chưa tới chục bước chân. Nhưng hôm ấy nó dài chẳng khác nào từ làng tôi lên Hà Nội. Mỗi bước đi đều khiến tim tôi đập mạnh hơn. Ra tới cửa, tôi khẽ thở phào. Chỉ cần bước qua sân là xong.</p>
+<p>Ngoài cổng, thằng Cò đã bắt đầu cười. Có lẽ nó nghĩ tôi sắp thành công rồi. Ngay cả thằng Đen cũng thôi không nhìn đi chỗ khác nữa mà đứng yên quan sát.</p>
+<p>Tôi bước xuống bậc thềm.</p>
+<p>Rồi đúng lúc ấy, giọng mẹ vang lên phía sau.</p>
+<p>- Đi đâu đấy?</p>
+<p>Tôi đứng chết trân.</p>
+<p>Cả khoảng sân bỗng im phăng phắc. Ngay cả tiếng ve dường như cũng nhỏ đi một chút.</p>
+<p>Tôi quay đầu lại.</p>
+<p>Mẹ đang nhìn tôi.</p>
+<p>Tôi nhìn mẹ.</p>
+<p>Hai mẹ con nhìn nhau.</p>
+<p>Trong vài giây ngắn ngủi ấy, đầu óc tôi hoạt động với tốc độ chưa từng có. Hàng chục lý do hiện lên rồi biến mất. Cuối cùng, tôi chọn một lý do nghe có vẻ ít vô lý nhất.</p>
+<p>- Con... đi uống nước.</p>
+<p>Mẹ nhíu mày.</p>
+<p>- Uống nước ngoài đường à?</p>
+<p>Tôi cười. Một nụ cười rất ngốc. Đến tận bây giờ nghĩ lại tôi vẫn thấy ngốc.</p>
+<p>Mẹ đặt bó nan xuống bên cạnh. Rồi chậm rãi đứng dậy. Chỉ cần nhìn thấy động tác ấy thôi là tôi biết mọi chuyện không ổn rồi.</p>
+<p>Quả nhiên, bàn tay mẹ với lấy cây roi tre dựng cạnh cột hiên.</p>
+<p>Tôi quay người bỏ chạy.</p>
+<p>Tiếng dép đập xuống sân gạch lộp bộp. Tôi lao một mạch về phía cây ổi giữa sân rồi vòng qua thân cây. Mẹ đuổi theo phía sau. Hai mẹ con chạy vòng quanh gốc ổi như đang chơi một trò đuổi bắt kỳ lạ.</p>
+<p>Ngoài cổng, thằng Cò cười đến mức gập cả người lại.</p>
+<p>- Chạy đi! Chạy đi!</p>
+<p>Nó vừa cười vừa hét.</p>
+<p>Thằng phản bội.</p>
+<p>Tôi nghiến răng thề trong bụng rằng lát nữa ra đình làng nhất định sẽ lấy hết bi của nó. Nhưng trước tiên tôi phải sống sót đã. Cuộc rượt đuổi kéo dài thêm vài vòng. Cuối cùng mẹ cũng dừng lại, vừa thở vừa chống tay lên hông nhìn tôi. Tôi đứng phía bên kia gốc ổi, cũng thở chẳng khác gì.</p>
+<p>Một lúc sau, mẹ lắc đầu.</p>
+<p>- Đi thì đi luôn đi. Chiều về đừng để tao phải đi tìm.</p>
+<p>Tôi ngẩn người mất một giây. Rồi ngay giây tiếp theo đã phóng thẳng ra cổng như một mũi tên vừa được tháo dây.</p>
+<p>Thằng Cò né sang một bên.</p>
+<p>Thằng Đen ném cho tôi túi bi ve.</p>
+<p>- Đi thôi.</p>
+<p>Nó nói ngắn gọn.</p>
+<p>Tôi gật đầu.</p>
+<p>Ba đứa nhìn nhau rồi cùng quay về phía con đường đất chạy ra cuối làng. Ngoài kia, nắng hè vẫn vàng rực trên những lũy tre và đâu đó dưới bóng cây sà cừ sau đình làng, một buổi chiều dài đang đợi chúng tôi.</p>
+<p>Con đường đất trước mặt sáng lóa dưới nắng. Vừa chạy khỏi cổng nhà được một đoạn, tôi đã nghe thấy tiếng mẹ gọi với theo phía sau. Nội dung đại khái vẫn là những lời cảnh cáo quen thuộc mà đứa trẻ nào ở quê cũng từng nghe ít nhất vài trăm lần trong đời.</p>
+<p>Đừng ra sông.</p>
+<p>Đừng đánh nhau.</p>
+<p>Đừng nghịch dại.</p>
+<p>Và nhớ về trước khi trời tối.</p>
+<p>Tất nhiên, chúng tôi chẳng đứa nào thật sự để tâm tới những điều ấy.</p>
+<p>Ít nhất là lúc đó.</p>
+<p>Thằng Cò đi bên cạnh vẫn chưa thôi cười.</p>
+<p>- Mặt mày lúc nãy buồn cười thật.</p>
+<p>- Im đi.</p>
+<p>- Tao tưởng hôm nay mày bị nhốt luôn rồi.</p>
+<p>- Im không tao đấm bây giờ.</p>
+<p>Nó cười càng to hơn.</p>
+<p>Tôi biết nói tiếp cũng vô ích nên quay sang nhìn thằng Đen. Nó vẫn đi phía trước như mọi khi, tay đút túi quần, chân đá mấy viên sỏi ven đường. Trong đám ba đứa, nó luôn là đứa ít nói nhất. Nhiều lúc tôi và thằng Cò cãi nhau ầm ĩ cả quãng đường, quay sang mới phát hiện nó chẳng nói câu nào.</p>
+<p>Nhưng kỳ lạ là chẳng ai thấy điều đó bất thường.</p>
+<p>Có những người chỉ cần có mặt là đủ.</p>
+<p>Thằng Đen là kiểu người như thế.</p>
+<p>Chúng tôi đi hết con ngõ nhỏ rồi nhập vào con đường đất lớn chạy quanh làng. Nắng tháng sáu trải dài trên mặt đường thành một màu vàng chói mắt. Xa xa, hơi nóng bốc lên khiến mọi thứ như nhòe đi. Những bụi tre ven đường đổ bóng loang lổ xuống mặt đất. Gió thổi qua làm lá tre va vào nhau xào xạc.</p>
+<p>Làng tôi có rất nhiều tre.</p>
+<p>Nhiều đến mức hồi nhỏ tôi từng nghĩ nơi nào trên thế giới cũng phải có tre như vậy. Tre mọc quanh bờ ao. Tre đứng sau những ngôi nhà. Tre chạy dọc các con đường đất. Có những bụi tre già thân to đến mức hai đứa trẻ ôm không xuể. Mỗi lần có gió lớn, cả lũy tre lại nghiêng mình xào xạc như đang trò chuyện với nhau.</p>
+<p>Đi được một đoạn, chúng tôi gặp mấy bà, mấy cô đang ngồi dưới bóng tre làm việc.</p>
+<p>Những bó tre được chẻ sẵn chất thành đống bên cạnh. Người đan rổ. Người đan rá. Người ngồi lựa nan. Vừa làm vừa nói chuyện. Tiếng cười thỉnh thoảng lại vang lên giữa buổi trưa yên ắng.</p>
+<p>Một bà nhìn thấy chúng tôi thì cười.</p>
+<p>- Ba thằng quỷ lại trốn ngủ phải không?</p>
+<p>Thằng Cò nhanh miệng đáp:</p>
+<p>- Bọn cháu đi học thêm.</p>
+<p>Cả đám người lớn phá lên cười. Đến chính nó cũng không nhịn được cười. Ở tuổi đó, chúng tôi luôn nghĩ mình nói dối rất giỏi. Nhưng người lớn hình như nhìn cái là biết.</p>
+<p>Đi thêm một đoạn nữa, nhà cửa bắt đầu thưa dần. Những khoảng vườn rộng xuất hiện nhiều hơn. Có nhà trồng chuối. Có nhà trồng mít. Có nhà nuôi cả đàn vịt chạy lạch bạch ngoài đường. Một con chó vàng nằm dưới gốc cây thấy chúng tôi chạy qua thì ngẩng đầu nhìn rồi lại lười biếng nằm xuống.</p>
+<p>Xa xa phía bên phải là khu chợ nhỏ của làng.</p>
+<p>Buổi trưa chợ gần như tan hết. Chỉ còn vài người bán rau ngồi lại dưới những tấm bạt cũ. Mấy chiếc xe đạp dựng nghiêng bên lề đường. Một bà cụ đang phe phẩy chiếc quạt nan trước sạp hàng. Không khí yên ả đến mức tôi có cảm giác cả ngôi làng đang chậm lại dưới cái nắng đầu hè.</p>
+<p>Nhưng với bọn trẻ chúng tôi thì khác.</p>
+<p>Mùa hè chẳng bao giờ chậm cả. Nó luôn trôi rất nhanh. Nhanh đến mức vừa mới sáng đã thành trưa, vừa mới trưa đã tới chiều. Và chẳng ai muốn lãng phí một phút nào.</p>
+<p>- Nhanh lên. – tôi nói</p>
+<p>Thằng Đen đột nhiên lên tiếng.</p>
+<p>Đó là câu dài nhất nó nói từ lúc rời khỏi nhà tôi tới giờ.</p>
+<p>- Tao nghe bảo thằng Hưng mang nguyên hộp bi mới ra.</p>
+<p>Mắt thằng Cò sáng lên.</p>
+<p>- Thật không?</p>
+<p>- Thật.</p>
+<p>- Thế thì phải lấy hết của nó.</p>
+<p>Tôi bật cười.</p>
+<p>Đó chính là cách suy nghĩ của trẻ con ngày ấy. Một hộp bi mới có sức hấp dẫn chẳng khác nào kho báu. Đứa nào sở hữu nhiều bi đẹp nhất sẽ trở thành người được ngưỡng mộ nhất trong đám.</p>
+<p>Con đường trước mặt bắt đầu mở rộng. Những mái nhà thấp dần ở lại phía sau. Trước mắt chúng tôi là cánh đồng. Gió từ ngoài đồng thổi tới mang theo mùi lúa non và mùi đất. Từng đợt gió lướt qua làm những thửa ruộng gợn lên như sóng. Xa hơn nữa, dưới ánh nắng mùa hè, mặt nước sông lấp lánh như được phủ một lớp bạc mỏng.</p>
+<p>Tôi nhìn dòng sông một lúc.</p>
+<p>Rồi lại nhìn về phía đình làng.</p>
+<p>Từ đây đã có thể thấy tán cây sà cừ khổng lồ vươn lên khỏi những mái ngói cũ. Dưới bóng cây ấy, tiếng hò hét của bọn trẻ bắt đầu vọng tới theo gió.</p>
+<p>Thằng Cò lập tức tăng tốc.</p>
+<p>Tôi và thằng Đen chạy theo phía sau.</p>
+<p>Chỉ ít phút nữa thôi, chúng tôi sẽ có mặt ở nơi náo nhiệt nhất làng vào mỗi buổi chiều hè. Và cũng chính tại đó, tôi lần đầu tiên được chứng kiến thằng Đen làm một việc mà suốt nhiều năm sau tôi vẫn không quên.</p>
+<p>Khi chúng tôi chạy tới nơi, trận bắn bi đã bắt đầu từ lúc nào. Dưới bóng cây sà cừ, hơn chục đứa trẻ đang vây quanh một vòng tròn được vạch trên nền đất. Tiếng cãi nhau, tiếng cười và tiếng reo hò hòa lẫn vào nhau tạo thành một thứ âm thanh náo nhiệt mà chỉ cần nghe thấy thôi cũng biết mùa hè đang ở ngay trước mặt. Thằng Hưng quả nhiên mang theo hộp bi mới. Chiếc hộp sữa cũ được nó ôm khư khư trong lòng như báu vật. Mỗi lần có ai ghé lại gần là nó lại vội vàng che đi như sợ người khác cướp mất.</p>
+<p>Thằng Cò vừa nhìn thấy đã sáng cả mắt. Nó chen qua đám đông rồi chìa tay ra trước mặt thằng Hưng.</p>
+<p>- Đưa tao xem một tí.</p>
+<p>- Không.</p>
+<p>- Tao xem thôi chứ có lấy đâu.</p>
+<p>- Không là không.</p>
+<p>Thằng Hưng ôm hộp bi lùi lại mấy bước khiến cả đám phá lên cười. Thằng Cò đứng giữa sân đình chửi đổng vài câu rồi quay về với vẻ mặt đầy bất mãn. Tôi biết thừa nếu đổi vị trí cho nhau thì có khi nó còn giữ hộp bi kỹ hơn thế. Hồi đó, trong mắt bọn trẻ chúng tôi, một hộp bi đẹp chẳng khác nào một kho báu. Đứa nào sở hữu nhiều bi nhất cũng giống như đang sở hữu cả thế giới.</p>
+<p>Bãi đất sau đình nằm sát bờ sông. Chỉ cần đi thêm vài bước là đã nhìn thấy mặt nước sông lấp lánh dưới nắng. Dòng sông lặng lẽ chảy qua làng như nó vẫn luôn như thế từ rất lâu trước khi chúng tôi sinh ra. Nhưng chiều hôm ấy chẳng đứa nào quan tâm tới con sông. Tất cả ánh mắt đều dồn vào vòng bi nằm dưới gốc sà cừ. Ở chính giữa vòng là một viên bi màu xanh trong suốt, đẹp nhất trong đám. Đó là phần thưởng cho người thắng cuộc.</p>
+<p>Những lượt chơi liên tiếp diễn ra. Đứa trúng, đứa trượt, đứa suýt trúng rồi lại tiếc nuối ôm đầu. Tiếng la ó vang lên không ngớt. Tôi cũng tham gia một lượt và thất bại một cách đầy xấu hổ. Viên bi của tôi chẳng những không chạm được vào mục tiêu mà còn lăn thẳng ra khỏi vòng đất. Thằng Cò cười đến mức ngồi phệt cả xuống đất. Nhưng chỉ vài phút sau, tới lượt nó bắn thì kết quả cũng chẳng khá hơn. Viên bi của nó đi được nửa đường rồi nằm im như thể đột nhiên mất hết ý chí chiến đấu. Lần này tới lượt tôi cười.</p>
+<p>Trong lúc bọn tôi còn đang cãi nhau xem ai dở hơn ai thì thằng Đen vẫn ngồi xổm ở một góc, hai tay ôm đầu gối nhìn đám đông trước mặt. Nó chưa bắn lần nào. Tôi huých vai nó.</p>
+<p>- Mày không chơi à?</p>
+<p>Nó lắc đầu.</p>
+<p>- Chờ.</p>
+<p>- Chờ gì?</p>
+<p>- Chờ tụi nó bắn hết.</p>
+<p>Tôi chẳng hiểu nó đang nghĩ gì. Nhưng điều đó cũng chẳng có gì lạ. Từ nhỏ tới lớn, số lần tôi hiểu được suy nghĩ của thằng Đen chắc còn ít hơn số lần tôi bị mẹ đuổi đánh. Nó luôn có những cách nhìn rất khác người. Trong khi bọn tôi lao vào bất cứ trò gì ngay khi có thể thì nó lại thích ngồi quan sát trước. Có khi ngồi hàng chục phút chỉ để nhìn một thứ mà chẳng ai khác để ý.</p>
+<p>Thêm vài lượt nữa trôi qua. Những đứa được xem là giỏi nhất trong đám cũng lần lượt thất bại. Viên bi xanh giữa vòng vẫn nằm yên ở vị trí cũ như đang thách thức tất cả. Lúc ấy thằng Đen mới chậm rãi đứng dậy. Không hiểu vì sao, vừa thấy nó bước tới, đám trẻ xung quanh tự động nhường ra một khoảng trống. Có lẽ ai cũng tò mò muốn xem lần này nó sẽ làm gì.</p>
+<p>Thằng Đen ngồi xuống mép vòng. Nó không bắn ngay mà cúi đầu quan sát mặt đất. Một cành cây khô nằm cạnh chân được nó nhặt lên rồi dùng để vạch vài đường rất nhỏ trên nền đất. Sau đó nó ngẩng lên nhìn viên bi xanh ở giữa vòng, lại nhìn khoảng cách từ vị trí tay mình tới mục tiêu. Toàn bộ quá trình ấy diễn ra chậm rãi đến mức thằng Cò bắt đầu sốt ruột.</p>
+<p>- Mày bắn hay đi xem hướng gió đấy?</p>
+<p>Cả đám bật cười.</p>
+<p>Riêng thằng Đen vẫn không phản ứng gì. Nó đặt viên bi xuống đất, kéo ngón tay cái ra sau rồi bất ngờ bật mạnh.</p>
+<p>Một tiếng &quot;cạch&quot; khô gọn vang lên.</p>
+<p>Viên bi lao đi trên mặt đất như có mắt. Nó không đi quá nhanh nhưng gần như chẳng lệch một chút nào. Tất cả chúng tôi đều nín thở nhìn theo. Chỉ một giây sau, viên bi của thằng Đen chạm đúng vào viên bi xanh giữa vòng. Tiếng va chạm vang lên giòn tan. Viên bi xanh bật ra ngoài trong sự ngỡ ngàng của cả đám.</p>
+<p>Tiếng reo hò lập tức nổ ra dưới gốc sà cừ. Thằng Cò há hốc miệng. Thằng Hưng ôm đầu tiếc nuối. Còn tôi chỉ biết lắc đầu cười. Thằng Đen vẫn vậy. Nó luôn làm được những việc khiến người khác phải bất ngờ bằng cái vẻ mặt bình thản như thể đó là chuyện hiển nhiên.</p>
+<p>Nhưng điều khiến tôi nhớ mãi về buổi chiều hôm ấy không phải cú bắn hoàn hảo đó.</p>
+<p>Mà là chuyện xảy ra ngay sau đó.</p>
+<p>Giữa lúc cả đám còn đang xúm lại tranh cãi xem cú bắn vừa rồi có phải ăn may hay không, từ phía bờ sông bất ngờ vang lên tiếng khóc của một đứa trẻ. Ban đầu âm thanh ấy rất nhỏ, gần như bị nhấn chìm bởi những tiếng cười nói dưới gốc cây. Nhưng chỉ một lát sau, tiếng khóc ngày càng rõ hơn. Nó mang theo sự hoảng hốt khiến tất cả dần im bặt.</p>
+<p>Ngay cả thằng Đen cũng quay đầu nhìn về phía bờ sông.</p>
+<p>Trong đám trẻ đang tụ tập dưới gốc sà cừ, người đầu tiên đứng dậy là thằng Đen. Nó không chạy ngay ra phía bờ sông mà chỉ quay đầu nhìn một lúc như để xác định xem tiếng khóc phát ra từ đâu. Đó là một thói quen của nó. Trong khi những đứa khác thường lao tới trước rồi mới nghĩ sau thì thằng Đen luôn làm ngược lại.</p>
+<p>Tiếng khóc lại vang lên, lần này rõ hơn hẳn. Nghe như của một đứa bé. Không cần ai bảo ai, cả đám lập tức chạy theo hướng ấy. Bãi đất dưới gốc sà cừ vốn đang ồn ào bỗng chốc bỏ trống. Những viên bi nằm lăn lóc trên mặt đất, còn cái vòng bi chưa kịp phân thắng bại đã bị bỏ lại phía sau. Tôi chạy sát bên thằng Cò, phía trước là thằng Đen. Chỉ vài chục bước chân là tới bờ sông.</p>
+<p>Tiếng khóc phát ra từ dưới một gốc dừa mọc nghiêng sát mép nước. Một thằng bé chừng năm, sáu tuổi đang đứng đó, mặt mũi lem luốc, nước mắt nước mũi chảy đầy mặt. Nó vừa khóc vừa nhìn xuống dòng sông. Thấy chúng tôi chạy tới, nó càng khóc to hơn.</p>
+<p>- Có chuyện gì thế? — thằng Cò hỏi.</p>
+<p>Đứa bé không trả lời được ngay. Nó vừa sụt sịt vừa chỉ tay xuống mép nước. Mất một lúc chúng tôi mới hiểu. Chiếc thuyền lá mà nó vừa thả xuống sông đã bị nước cuốn đi mất.</p>
+<p>Tất cả im lặng vài giây rồi thằng Cò quay sang nhìn tôi. Tôi nhìn lại nó. Cả hai đứa đều không nhịn được cười. Hoá ra chỉ là chuyện ấy. Nhưng đối với một đứa trẻ năm tuổi, mất một chiếc thuyền lá có khi còn nghiêm trọng hơn mất cả gia tài. Thằng bé vẫn khóc. Khóc rất thật. Khóc như thể vừa đánh mất thứ quý giá nhất trên đời.</p>
+<p>Tôi còn đang loay hoay nghĩ xem phải dỗ thế nào thì thằng Đen đã ngồi xuống cạnh nó từ lúc nào.</p>
+<p>- Mày tự gấp à? — nó hỏi.</p>
+<p>Thằng bé gật đầu.</p>
+<p>- Mất rồi.</p>
+<p>- Ừ.</p>
+<p>- Trôi mất rồi.</p>
+<p>- Tao biết.</p>
+<p>Thằng bé lại sụt sịt. Trong khi đó, thằng Đen nhìn theo chiếc lá đã bị dòng nước đưa đi khá xa rồi quay đầu nhìn quanh. Một lúc sau, nó bước tới bụi dừa nước gần đó, bẻ xuống một tàu lá chuối rồi ngồi xổm xuống đất.</p>
+<p>Tôi biết vẻ mặt ấy. Đó là vẻ mặt mỗi khi nó chuẩn bị làm một thứ gì đó. Hồi nhỏ, trong đám chúng tôi, nếu nói ai nghịch nhất thì chưa chắc là thằng Đen. Nhưng nếu nói ai khéo tay nhất thì chắc chắn là nó. Từ những lon sữa bò bỏ đi, nó có thể làm thành chiếc xe đồ chơi. Từ tre nứa, nó có thể làm cung tên. Có lần nó còn chế được một cái chong chóng bằng ống nứa quay tít trong gió khiến cả bọn trầm trồ suốt mấy ngày.</p>
+<p>Bây giờ cũng vậy. Nó ngồi dưới gốc cây, đôi bàn tay thoăn thoắt gấp tàu lá dừa. Chúng tôi đứng xung quanh nhìn mà chẳng ai nói gì. Chỉ vài phút sau, một chiếc thuyền mới đã xuất hiện. Chiếc thuyền lớn hơn chiếc cũ rất nhiều, thậm chí còn có cả cột buồm. Thằng bé ngừng khóc. Nó nhìn chiếc thuyền trong tay thằng Đen bằng đôi mắt đỏ hoe. Ngay cả tôi và thằng Cò cũng phải ngồi xổm xuống ngắm nghía.</p>
+<p>- Cho tao xem.</p>
+<p>- Để tao cầm thử.</p>
+<p>- Đẹp thế.</p>
+<p>Tiếng xuýt xoa vang lên liên tục. Còn thằng bé thì lần đầu tiên từ lúc chúng tôi chạy tới đã mỉm cười. Một nụ cười vẫn còn vương nước mắt.</p>
+<p>Thằng Đen đưa chiếc thuyền cho nó.</p>
+<p>- Thả lại đi.</p>
+<p>- Nhưng lại trôi mất.</p>
+<p>- Thì làm chiếc khác.</p>
+<p>Thằng bé ngẩn người. Có lẽ nó chưa từng nghĩ mọi chuyện lại đơn giản đến vậy.</p>
+<p>Nó ôm chiếc thuyền rồi chạy xuống mép nước. Chúng tôi đứng phía sau nhìn theo. Chiếc thuyền lá từ từ rời tay nó, chao nhẹ trên mặt sông rồi xuôi theo dòng nước. Lần này thằng bé không khóc nữa. Nó chạy dọc theo bờ sông để nhìn chiếc thuyền của mình đi xa dần, tiếng cười vang lên giữa buổi chiều mùa hè.</p>
+<p>Một cơn gió từ mặt sông thổi tới làm những tán lá trên cây sà cừ rung lên xào xạc. Tôi nhìn theo bóng đứa bé rồi quay sang thằng Đen. Nó đã đứng dậy từ lúc nào, tay phủi lớp bụi đất trên quần. Khuôn mặt vẫn bình thản như thể vừa rồi chẳng có gì đặc biệt xảy ra cả.</p>
+<p>Nhưng không hiểu sao lúc ấy tôi lại nghĩ khác. Bởi đó là lần đầu tiên tôi nhận ra rằng trong khi bọn tôi còn đang cười vì một chiếc thuyền lá bị nước cuốn đi, thằng Đen đã nghĩ tới việc làm một chiếc khác.</p>
+<p>Và nhiều năm sau, mỗi lần nhớ lại, tôi vẫn thấy đó chính là con người của nó.</p>
+<p>Chiếc thuyền lá dần trôi xa rồi mất hút sau đám bèo ven bờ. Thằng bé cũng thôi chạy. Nó đứng chống hai tay lên đầu gối, thở hổn hển nhưng khuôn mặt đã chẳng còn chút nước mắt nào. Trước khi về, nó còn quay lại nhìn thằng Đen rồi lí nhí cảm ơn. Thằng Đen chỉ gật đầu, chẳng nói gì thêm. Nó luôn như thế. Nếu giúp ai đó một việc gì, nó làm như thể đó là chuyện đương nhiên nhất trên đời.</p>
+<p>Khi bóng thằng bé khuất hẳn sau hàng tre ven sông, cả bọn mới quay trở lại gốc sà cừ. Trận bắn bi ban nãy coi như bị cắt ngang. Một vài đứa đã tranh thủ nhặt bi bỏ túi từ lúc nào. Thằng Hưng ngồi giữa bãi đất, hai tay ôm chiếc hộp sữa như sợ chỉ cần sơ ý một chút là tài sản của nó sẽ không cánh mà bay.</p>
+<p>- Chơi tiếp không? — thằng Cò hỏi tôi.</p>
+<p>- Chơi chứ.</p>
+<p>- Chưa phân thắng bại mà.</p>
+<p>Thế là cả đám lại ngồi xuống.</p>
+<p>Mặt trời lúc ấy đã chếch sang một bên. Bóng cây sà cừ trải dài hơn lúc đầu. Những đốm nắng xuyên qua tán lá rơi loang lổ trên mặt đất. Gió từ ngoài sông thổi vào mang theo hơi nước mát rượi khiến cái nóng của buổi trưa dịu đi thấy rõ.</p>
+<p>Đám trẻ trong làng chẳng cần ai nhắc cũng biết đó là lúc đẹp nhất của một ngày hè.</p>
+<p>Không còn nắng gắt, chưa tới giờ phải về và buổi chiều vẫn còn rất dài.</p>
+<p>Tôi thắng thêm được vài viên bi rồi lại thua mất mấy viên khác. Thằng Cò cũng chẳng khá hơn. Chỉ có thằng Đen vẫn đều đều gom bi về túi. Nó thắng không nhiều nhưng cũng hiếm khi thua. Cái cách nó chơi khiến người khác phát bực. Bao giờ cũng bình tĩnh. Bao giờ cũng tính toán. Ngay cả lúc thắng nó cũng chẳng tỏ ra vui mừng gì.</p>
+<p>- Mày có phải người không đấy?</p>
+<p>Có lần thằng Cò bực quá phải hỏi.</p>
+<p>- Không.</p>
+<p>Thằng Đen trả lời tỉnh bơ.</p>
+<p>Cả đám cười ầm lên.</p>
+<p>Chúng tôi chơi tới khi những cái bụng bắt đầu réo lên vì đói mới chịu nghỉ. Đứa nào đứa nấy phủi đất trên quần áo rồi ngồi thành một vòng dưới gốc cây nghỉ ngơi. Từ chỗ ấy có thể nhìn thấy gần như toàn bộ khúc sông trước mặt. Xa xa, vài chiếc thuyền nhỏ đang chậm rãi xuôi dòng. Bên kia bờ là những cánh đồng xanh trải dài tới tận chân trời.</p>
+<p>Thằng Cò nằm ngửa ra đất, hai tay gối sau đầu.</p>
+<p>- Sau này tao sẽ có một con thuyền.</p>
+<p>- Để làm gì? – tôi hỏi.</p>
+<p>- Đi khắp nơi.</p>
+<p>- Đi đâu? – tôi lại hỏi.</p>
+<p>- Đi đâu cũng được.</p>
+<p>Tôi bật cười.</p>
+<p>- Mày có biết chèo thuyền đâu.</p>
+<p>- Thì học.</p>
+<p>- Mày học bơi còn chưa xong.</p>
+<p>Cả đám lại cười.</p>
+<p>Riêng thằng Đen vẫn ngồi im, tay nghịch một cọng cỏ khô.</p>
+<p>- Còn mày?</p>
+<p>Tôi hỏi nó.</p>
+<p>- Sau này mày làm gì?</p>
+<p>Nó ngẩng đầu nhìn ra phía mặt sông. Ánh chiều đang dát vàng lên những con sóng nhỏ.</p>
+<p>- Chưa biết.</p>
+<p>- Tao biết rồi.</p>
+<p>Thằng Cò ngồi bật dậy.</p>
+<p>- Nó sẽ làm thợ gấp thuyền lá.</p>
+<p>Lần này tới tôi cười.</p>
+<p>Ngay cả thằng Đen cũng phải nhếch mép.</p>
+<p>Một cơn gió lớn bất ngờ thổi qua làm lá cây trên đầu rung lên xào xạc. Tiếng cười của bọn trẻ vang vọng dưới tán sà cừ rồi tan ra giữa không gian rộng lớn của buổi chiều quê.</p>
+<p>Ngày đó, chẳng đứa nào trong chúng tôi biết tương lai sẽ ra sao.</p>
+<p>Chúng tôi không biết sau này ai sẽ đi xa.</p>
+<p>Ai sẽ ở lại.</p>
+<p>Ai sẽ thành công.</p>
+<p>Ai sẽ thất bại.</p>
+<p>Chúng tôi chỉ biết rằng hôm ấy là một buổi chiều mùa hè rất đẹp. Một buổi chiều mà nhiều năm sau, khi nhớ lại, tôi vẫn còn nhìn thấy rõ từng khuôn mặt dưới bóng cây sà cừ, vẫn còn nghe thấy tiếng gió từ sông Đáy thổi vào và vẫn còn nhớ như in nụ cười hiếm hoi trên khuôn mặt thằng Đen.</p>
+<p>Bởi trong ký ức tuổi thơ của tôi, mùa hè năm ấy dường như sẽ chẳng bao giờ kết thúc.</p>
+<p>Chúng tôi ngồi dưới gốc sà cừ thêm một lúc nữa rồi mới đứng dậy. Lúc ấy mặt trời đã xuống thấp hơn nhiều. Ánh nắng không còn gay gắt như buổi trưa mà chuyển sang màu vàng dịu. Từ phía những cánh đồng ven sông, từng đợt gió mát thổi vào mang theo mùi lúa non và mùi đất. Đó là khoảng thời gian tôi thích nhất trong ngày. Mọi thứ dường như chậm lại. Ngay cả tiếng nói cười của bọn trẻ cũng nhỏ hơn lúc đầu.</p>
+<p>Từng đứa một bắt đầu ra về.</p>
+<p>Có đứa bị mẹ đứng tận đầu làng gọi tên. Có đứa nhớ ra còn phải đi chăn vịt. Có đứa đơn giản là đói bụng. Chẳng mấy chốc bãi đất dưới gốc sà cừ chỉ còn lại tôi, thằng Đen và thằng Cò.</p>
+<p>Thằng Cò là đứa đứng dậy đầu tiên.</p>
+<p>- Tao về đây. Không mẹ tao lại cầm chổi đi tìm.</p>
+<p>Nó phủi bụi trên quần rồi chạy biến mất theo con đường ven đồng. Chỉ còn tôi với thằng Đen ngồi lại.</p>
+<p>Chúng tôi chẳng nói gì.</p>
+<p>Hồi đó chuyện ấy rất bình thường.</p>
+<p>Có những người bạn mà chỉ cần ngồi cạnh nhau là đủ. Không cần phải tìm chủ đề để nói. Không cần phải cố làm điều gì cho bớt im lặng.</p>
+<p>Trước mặt chúng tôi, mặt sông Đáy đang ánh lên màu đỏ nhạt của hoàng hôn. Một đàn chim từ đâu bay ngang qua bầu trời rồi mất hút phía cuối cánh đồng. Xa xa, tiếng gọi nhau lùa trâu về chuồng bắt đầu vang lên từ các lối xóm.</p>
+<p>Tôi nhặt một hòn sỏi rồi ném xuống nước.</p>
+<p>- Ê.</p>
+<p>- Gì?</p>
+<p>- Mày nghĩ sau này tụi mình có còn chơi với nhau không?</p>
+<p>Đó là một câu hỏi rất trẻ con.</p>
+<p>Nhưng trẻ con lại hay hỏi những câu như thế.</p>
+<p>Thằng Đen ngẫm nghĩ vài giây rồi nhún vai.</p>
+<p>- Có.</p>
+<p>- Lỡ không thì sao?</p>
+<p>- Thì không.</p>
+<p>Tôi bật cười.</p>
+<p>Đúng là chỉ có nó mới trả lời được như vậy.</p>
+<p>Mặt trời tiếp tục lặn xuống phía sau những rặng tre. Bóng của cây sà cừ kéo dài trên mặt đất. Khắp làng bắt đầu xuất hiện những làn khói bếp mỏng bay lên từ các mái nhà. Buổi chiều đang khép lại.</p>
+<p>- Về thôi.</p>
+<p>Thằng Đen đứng dậy trước.</p>
+<p>Tôi cũng đứng theo.</p>
+<p>Hai đứa chậm rãi đi dọc con đường đất trở về làng. Trên đường, chúng tôi gặp những người vừa đi làm đồng về. Những con trâu đủng đỉnh bước trước, người đi sau cầm roi phe phẩy. Tiếng chó sủa vang lên từ cuối xóm. Mùi cơm mới đâu đó theo gió bay ra khiến bụng tôi réo lên từng hồi.</p>
+<p>Mọi thứ quen thuộc đến mức chẳng ai nghĩ nó sẽ thay đổi.</p>
+<p>Ít nhất thì hồi đó tôi vẫn nghĩ như vậy.</p>
+<p>Tôi nghĩ cây ổi ở sân nhà sẽ mãi đứng đó. Tôi nghĩ dòng sông sẽ mãi chảy như thế. Tôi nghĩ những buổi chiều dưới gốc sà cừ sẽ còn kéo dài mãi. Và tôi cũng nghĩ rằng bọn tôi sẽ mãi là những đứa trẻ.</p>
+<p>Nhưng rồi thời gian vẫn lặng lẽ trôi đi như dòng nước ngoài kia.</p>
+<p>Nhiều năm sau, khi nhớ lại mùa hè năm ấy, điều hiện lên đầu tiên trong đầu tôi không phải trận bắn bi dưới gốc sà cừ, cũng không phải chiếc thuyền lá trên sông. Điều tôi nhớ nhất lại là hình ảnh một thằng nhóc đen nhẻm, ít nói, lúc nào cũng thích ngồi quan sát mọi thứ trước khi hành động.</p>
+<p>Ngày đó, trong mắt tôi, thằng Đen chỉ là một đứa bạn hơi kỳ quặc.</p>
+<p>Tôi đâu biết rằng, trong tất cả những người bạn của tuổi thơ mình, nó lại là người để lại trong tôi nhiều ký ức nhất.</p>
+<p>Và câu chuyện về thằng Đen thực ra mới chỉ bắt đầu.</p>
+  </div>
+  <div class="chapterNav">
+    <button class="readerNavBtn" data-goto="0">← Phần trước</button>
+    <button class="readerNavBtn light" data-toc>☰ Mục lục</button>
+    
+  </div>
+</section>
+
+      </article>
+    </section>
+
+    <div class="backTop">
+      <a class="btn light" href="../ebook.html">← Về trang Ebook</a>
+    </div>
+  </div>
+</main>
+
+<script src="../script.js"></script>
+<script>
+  const pages = Array.from(document.querySelectorAll(".chapterPage"));
+  const tocLinks = Array.from(document.querySelectorAll(".ebookToc a[data-chapter]"));
+  const progress = document.getElementById("readerProgress");
+  let currentPage = 0;
+  let fontSize = 19;
+
+  function showChapter(index) {
+    if (!pages.length) return;
+    if (index < 0) index = 0;
+    if (index >= pages.length) index = pages.length - 1;
+
+    currentPage = index;
+
+    pages.forEach(page => page.classList.remove("active"));
+    tocLinks.forEach(link => link.classList.remove("active"));
+
+    pages[currentPage].classList.add("active");
+    if (tocLinks[currentPage]) tocLinks[currentPage].classList.add("active");
+    if (progress) progress.textContent = `Đang đọc: ${currentPage + 1} / ${pages.length}`;
+
+    const reader = document.getElementById("reader");
+    if (reader) reader.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  tocLinks.forEach((link, index) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      showChapter(index);
+    });
+  });
+
+  document.querySelectorAll("[data-goto]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      showChapter(Number(btn.dataset.goto));
+    });
+  });
+
+  document.querySelectorAll("[data-toc]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelector(".ebookToc").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
+  document.getElementById("fontPlus").addEventListener("click", () => {
+    fontSize = Math.min(24, fontSize + 1);
+    document.documentElement.style.setProperty("--reader-font-size", fontSize + "px");
+  });
+
+  document.getElementById("fontMinus").addEventListener("click", () => {
+    fontSize = Math.max(16, fontSize - 1);
+    document.documentElement.style.setProperty("--reader-font-size", fontSize + "px");
+  });
+
+  document.getElementById("darkToggle").addEventListener("click", () => {
+    document.body.classList.toggle("readerDark");
+    document.getElementById("darkToggle").classList.toggle("active");
+  });
+
+  showChapter(0);
+</script>
+</body>
+</html>

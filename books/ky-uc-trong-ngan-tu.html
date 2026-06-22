@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ký Ức Trong Ngăn Tủ - Tác giả Tịch Lam</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+
+  <style>
+    .ebookShell {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 28px;
+      align-items: start;
+      margin-top: 34px;
+    }
+
+    .ebookToc {
+      position: sticky;
+      top: 95px;
+      background: #fffaf3;
+      border: 1px solid var(--line, #e8d3b8);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 12px 32px rgba(82,44,16,.08);
+    }
+
+    .ebookToc b {
+      display: block;
+      margin-bottom: 14px;
+      font-size: 18px;
+    }
+
+    .ebookToc a {
+      display: block;
+      padding: 11px 12px;
+      border-radius: 10px;
+      color: #54351f;
+      line-height: 1.35;
+      margin-bottom: 6px;
+      transition: .2s;
+    }
+
+    .ebookToc a:hover,
+    .ebookToc a.active {
+      background: #f1dfc7;
+      color: #3b220f;
+    }
+
+    .readerTools {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line, #e8d3b8);
+    }
+
+    .toolBtn,
+    .readerNavBtn {
+      border: 1px solid #8a5528;
+      background: transparent;
+      color: #6b3b18;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    .toolBtn.active,
+    .readerNavBtn.primary {
+      background: #7a421d;
+      color: #fff;
+    }
+
+    .ebookReader {
+      min-width: 0;
+    }
+
+    .chapterPage {
+      display: none;
+      background: #fffaf3;
+      border: 1px solid var(--line, #e8d3b8);
+      border-radius: 22px;
+      padding: clamp(28px, 5vw, 58px);
+      box-shadow: 0 18px 44px rgba(82,44,16,.10);
+      scroll-margin-top: 100px;
+    }
+
+    .chapterPage.active {
+      display: block;
+      animation: fadeChapter .25s ease;
+    }
+
+    @keyframes fadeChapter {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .chapterTop {
+      text-align: center;
+      margin-bottom: 34px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid #ead7bd;
+      position: relative;
+    }
+
+    .chapterTop:after {
+      content: "❦";
+      position: absolute;
+      left: 50%;
+      bottom: -14px;
+      transform: translateX(-50%);
+      background: #fffaf3;
+      padding: 0 16px;
+      color: #9a6a3d;
+      font-size: 22px;
+    }
+
+    .chapterTop span {
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      color: #9a6a3d;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .chapterTop h2 {
+      margin: 0;
+      font-size: clamp(32px, 5vw, 50px);
+      line-height: 1.15;
+    }
+
+    .chapterText {
+      max-width: 820px;
+      margin: auto;
+    }
+
+    .chapterText p {
+      font-size: var(--reader-font-size, 19px);
+      line-height: 2.05;
+      margin: 0 0 24px;
+      color: #4f3929;
+      text-align: left;
+    }
+
+    .chapterText .signature {
+      text-align: right;
+      margin-top: 42px;
+      font-style: italic;
+    }
+
+    .chapterNav {
+      max-width: 820px;
+      margin: 48px auto 0;
+      padding-top: 24px;
+      border-top: 1px solid #ead7bd;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .readerProgress {
+      margin-top: 18px;
+      font-size: 14px;
+      color: #6d5644;
+    }
+
+    body.readerDark {
+      background: #201206;
+    }
+
+    body.readerDark .bookPage,
+    body.readerDark .chapterPage,
+    body.readerDark .ebookToc {
+      background: #2a1608;
+      border-color: #5c361c;
+    }
+
+    body.readerDark .chapterText p,
+    body.readerDark .ebookToc a,
+    body.readerDark .readerProgress {
+      color: #f1dfc7;
+    }
+
+    body.readerDark .chapterTop h2,
+    body.readerDark .ebookToc b {
+      color: #fff2dd;
+    }
+
+    body.readerDark .chapterTop:after {
+      background: #2a1608;
+    }
+
+    body.readerDark .toolBtn,
+    body.readerDark .readerNavBtn {
+      color: #f1dfc7;
+      border-color: #c6945d;
+    }
+
+    @media (max-width: 900px) {
+      .ebookShell {
+        grid-template-columns: 1fr;
+      }
+
+      .ebookToc {
+        position: relative;
+        top: 0;
+      }
+
+      .chapterNav {
+        flex-direction: column;
+      }
+
+      .readerNavBtn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="logo" href="../index.html">
+        Tác giả Tịch Lam 🪶
+        <span>Ký ức • Tuổi trẻ • Giấc mơ</span>
+      </a>
+
+      <nav class="menu">
+        <a href="../index.html">Trang chủ</a>
+        <a href="../ebook.html">Ebook</a>
+        <a href="../tac-gia.html">Về tác giả</a>
+        <a href="../doc-gia.html">Cảm nhận độc giả</a>
+      </nav>
+
+      <span class="hamb">☰</span>
+    </div>
+  </header>
+
+  <main class="bookPage">
+    <div class="container">
+
+      <section class="bookIntro">
+        <div class="bigCover">
+          <img src="../images/ky-uc-trong-ngan-tu1.png" alt="Ký Ức Trong Ngăn Tủ">
+        </div>
+
+        <div class="bookInfo">
+          <div class="eyebrow">Tiểu thuyết học đường</div>
+          <h1>Ký Ức Trong Ngăn Tủ</h1>
+
+          <p><b>Tác giả:</b> Phan Hải Nam · <b>Bút danh:</b> Tịch Lam</p>
+
+          <p>
+            Có những lá thư được viết ra nhưng không bao giờ được gửi đi.
+            Có những lời thích ai đó được giấu kín suốt cả tuổi học trò.
+            "Ký Ức Trong Ngăn Tủ" là câu chuyện về những bức thư chưa từng trao,
+            một tờ giấy nhỏ bị bỏ quên từ ngày cuối cấp và một mối tình chỉ được nhận ra khi mọi thứ đã quá muộn.
+          </p>
+
+          <div class="heroActions">
+            <a class="btn" href="#reader">Đọc từ đầu</a>
+            <a class="btn light" href="../ebook.html">Quay lại Ebook</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="reader" class="readerWrap ebookShell">
+        <aside class="ebookToc">
+          <b>Mục lục</b>
+          <a href="#loi-noi-dau" data-chapter="0">Lời mở đầu</a>
+<a href="#chuong-1" data-chapter="1">Chương 1</a>
+<a href="#chuong-2" data-chapter="2">Chương 2</a>
+<a href="#chuong-3" data-chapter="3">Chương 3</a>
+
+          <div class="readerTools">
+            <button class="toolBtn" id="fontMinus">A-</button>
+            <button class="toolBtn" id="fontPlus">A+</button>
+            <button class="toolBtn" id="darkToggle">Nền tối</button>
+          </div>
+
+          <div class="readerProgress" id="readerProgress">Đang đọc: 1 / 4</div>
+        </aside>
+
+        <article class="ebookReader">
+          
+<section class="chapterPage active" id="loi-noi-dau" data-index="0">
+  <div class="chapterTop">
+    <span>Phần 01</span>
+    <h2>Lời mở đầu</h2>
+  </div>
+  <div class="chapterText">
+    <p>Có những người rời khỏi cuộc đời ta mà không mang theo điều gì cả.</p>
+<p>Họ để lại một chiếc ghế trống trong lớp học. Một con đường quen bỗng trở nên dài hơn. Một bản nhạc nghe mãi không dám tắt. Và một khoảng lặng rất sâu mà nhiều năm sau vẫn không ai lấp đầy được.</p>
+<p>Tôi từng nghĩ điều đáng sợ nhất của chia ly là mất đi một người.</p>
+<p>Nhưng rồi tôi nhận ra, điều đáng sợ hơn là mất đi chính phiên bản của mình khi còn ở bên người đó.</p>
+<p>Bởi có những người khi xuất hiện đã vô tình trở thành một phần của tuổi trẻ ta.</p>
+<p>Khi họ rời đi, họ không chỉ mang theo những kỷ niệm.</p>
+<p>Họ mang theo cả một khoảng thời gian.</p>
+<p>Một khoảng thời gian mà sau này, dù có đi qua bao nhiêu năm tháng nữa, ta cũng không thể quay trở lại.</p>
+<p>&quot;Ký Ức Trong Ngăn Tủ&quot; được viết ra từ những điều như thế.</p>
+<p>Từ những lá thư chưa từng gửi.</p>
+<p>Từ những lời thích ai đó mãi mãi không được nói thành lời.</p>
+<p>Từ những cuộc chia tay diễn ra quá nhẹ nhàng đến mức nhiều năm sau người ta vẫn không hiểu tại sao mọi thứ lại kết thúc.</p>
+<p>Và từ những ký ức tưởng như đã ngủ quên rất lâu.</p>
+<p>Có những ngày tôi mở lại một cuốn sổ cũ.</p>
+<p>Nhìn thấy nét chữ của mình năm mười bảy tuổi.</p>
+<p>Nhìn thấy một cái tên từng được viết kín trong những trang giấy.</p>
+<p>Nhìn thấy những dự định ngây ngô mà ngày ấy tôi từng tin chắc sẽ trở thành hiện thực.</p>
+<p>Rồi chợt nhận ra...</p>
+<p>Người viết những dòng chữ ấy cũng đã biến mất từ rất lâu rồi.</p>
+<p>Chúng ta vẫn mang cùng một cái tên.</p>
+<p>Vẫn sống trong cùng một cuộc đời.</p>
+<p>Nhưng không còn là cùng một con người nữa.</p>
+<p>Có lẽ đó là lý do ký ức luôn khiến người ta đau.</p>
+<p>Không phải vì nó quá buồn.</p>
+<p>Mà bởi nó quá đẹp.</p>
+<p>Đẹp đến mức ta biết rằng cả phần đời còn lại cũng sẽ không bao giờ gặp lại được lần thứ hai.</p>
+<p>Có những buổi chiều đã là lần cuối cùng mà ta không hề hay biết.</p>
+<p>Có những cuộc trò chuyện đã là lần cuối cùng mà ta không hề hay biết.</p>
+<p>Và có những người, sau khi quay lưng bước đi, đã vô tình mang theo cả một phần tuổi trẻ của chúng ta.</p>
+<p>Nhiều năm sau.</p>
+<p>Khi tóc đã điểm bạc.</p>
+<p>Khi những con đường cũ đã đổi thay.</p>
+<p>Khi những người từng thân thuộc giờ chỉ còn tồn tại trong vài tấm ảnh cũ.</p>
+<p>Ta mới hiểu rằng điều đau lòng nhất không phải là đánh mất một ai đó.</p>
+<p>Mà là một ngày nào đó, khi mở lại chiếc ngăn tủ phủ đầy bụi của ký ức, ta nhận ra...</p>
+<p>Người mà mình nhớ nhất.</p>
+<p>Lại chính là bản thân mình của những năm tháng ấy.</p>
+<p class="signature">— Tịch Lam</p>
+  </div>
+  <div class="chapterNav">
+    
+    <button class="readerNavBtn light" data-toc>☰ Mục lục</button>
+    <button class="readerNavBtn primary" data-goto="1">Phần sau →</button>
+  </div>
+</section>
+
+<section class="chapterPage " id="chuong-1" data-index="1">
+  <div class="chapterTop">
+    <span>Phần 02</span>
+    <h2>Chương 1</h2>
+  </div>
+  <div class="chapterText">
+    <p>Nội dung chương 1 sẽ được cập nhật sau.</p>
+  </div>
+  <div class="chapterNav">
+    <button class="readerNavBtn" data-goto="0">← Phần trước</button>
+    <button class="readerNavBtn light" data-toc>☰ Mục lục</button>
+    <button class="readerNavBtn primary" data-goto="2">Phần sau →</button>
+  </div>
+</section>
+
+<section class="chapterPage " id="chuong-2" data-index="2">
+  <div class="chapterTop">
+    <span>Phần 03</span>
+    <h2>Chương 2</h2>
+  </div>
+  <div class="chapterText">
+    <p>Nội dung chương 2 sẽ được cập nhật sau.</p>
+  </div>
+  <div class="chapterNav">
+    <button class="readerNavBtn" data-goto="1">← Phần trước</button>
+    <button class="readerNavBtn light" data-toc>☰ Mục lục</button>
+    <button class="readerNavBtn primary" data-goto="3">Phần sau →</button>
+  </div>
+</section>
+
+<section class="chapterPage " id="chuong-3" data-index="3">
+  <div class="chapterTop">
+    <span>Phần 04</span>
+    <h2>Chương 3</h2>
+  </div>
+  <div class="chapterText">
+    <p>Nội dung chương 3 sẽ được cập nhật sau.</p>
+  </div>
+  <div class="chapterNav">
+    <button class="readerNavBtn" data-goto="2">← Phần trước</button>
+    <button class="readerNavBtn light" data-toc>☰ Mục lục</button>
+    
+  </div>
+</section>
+
+        </article>
+      </section>
+
+      <div class="backTop">
+        <a class="btn light" href="../ebook.html">← Về trang Ebook</a>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="../script.js"></script>
+  <script>
+    const pages = Array.from(document.querySelectorAll(".chapterPage"));
+    const tocLinks = Array.from(document.querySelectorAll(".ebookToc a[data-chapter]"));
+    const progress = document.getElementById("readerProgress");
+    let currentPage = 0;
+    let fontSize = 19;
+
+    function showChapter(index) {
+      if (!pages.length) return;
+      if (index < 0) index = 0;
+      if (index >= pages.length) index = pages.length - 1;
+
+      currentPage = index;
+
+      pages.forEach(page => page.classList.remove("active"));
+      tocLinks.forEach(link => link.classList.remove("active"));
+
+      pages[currentPage].classList.add("active");
+      if (tocLinks[currentPage]) tocLinks[currentPage].classList.add("active");
+      if (progress) progress.textContent = `Đang đọc: ${currentPage + 1} / ${pages.length}`;
+
+      const reader = document.getElementById("reader");
+      if (reader) reader.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    tocLinks.forEach((link, index) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        showChapter(index);
+      });
+    });
+
+    document.querySelectorAll("[data-goto]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        showChapter(Number(btn.dataset.goto));
+      });
+    });
+
+    document.querySelectorAll("[data-toc]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelector(".ebookToc").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    document.getElementById("fontPlus").addEventListener("click", () => {
+      fontSize = Math.min(24, fontSize + 1);
+      document.documentElement.style.setProperty("--reader-font-size", fontSize + "px");
+    });
+
+    document.getElementById("fontMinus").addEventListener("click", () => {
+      fontSize = Math.max(16, fontSize - 1);
+      document.documentElement.style.setProperty("--reader-font-size", fontSize + "px");
+    });
+
+    document.getElementById("darkToggle").addEventListener("click", () => {
+      document.body.classList.toggle("readerDark");
+      document.getElementById("darkToggle").classList.toggle("active");
+    });
+
+    showChapter(0);
+  </script>
+</body>
+</html>
