@@ -1878,3 +1878,113 @@ a {
     text-align: left;
   }
 }
+.milestoneGrid{
+  align-items: stretch;
+}
+
+.milestoneCard{
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+}
+
+.milestoneCard h3{
+  min-height: 72px;
+}
+
+.milestoneCard p{
+  flex: 1;
+}
+.milestoneGrid,
+.timelineGrid{
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 24px !important;
+  align-items: stretch !important;
+}
+
+.milestoneCard,
+.timelineCard{
+  min-height: 360px !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.milestoneCard h3,
+.timelineCard h3{
+  min-height: 72px !important;
+}
+
+.milestoneCard p,
+.timelineCard p{
+  line-height: 1.75 !important;
+}
+.bookCard{
+  height: auto !important;
+  min-height: 720px;
+}
+
+.bookCard p{
+  display: -webkit-box;
+  -webkit-line-clamp: 8;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cardBody{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.cardBtns{
+  margin-top: auto;
+}
+.card{
+  height: auto !important;
+  min-height: 760px;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardBody{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.cardBody p{
+  display: -webkit-box;
+  -webkit-line-clamp: 9;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cardBtns{
+  margin-top: auto;
+}
+#books .card{
+  height: auto !important;
+  min-height: 820px !important;
+  overflow: visible !important;
+}
+
+#books .cardBody{
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  min-height: 480px !important;
+}
+
+#books .cardBody p{
+  display: -webkit-box !important;
+  -webkit-line-clamp: 6 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+#books .cardBtns{
+  margin-top: auto !important;
+  padding-top: 22px !important;
+}
